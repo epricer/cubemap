@@ -23,11 +23,13 @@ foo {
 @keyframes highlight {
     0% {
         transform: scale(1, 1);
+        border-radius: 0px;
         font-size: 8pt;
     }
     100% {
         transform: scale(2.5, 2.5);
         font-size: 4pt;
+        border-radius: 5px;
     }
 }
 
