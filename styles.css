@@ -1,0 +1,312 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+body {
+    background-position: right;
+    font-family: 'Roboto', sans-serif;
+    background-color: #FAFAFA;
+    /* page background */
+    color: #58585A;
+    /* make edits text */
+    border: 0px;
+    margin: 2px;
+    padding: 2px;
+}
+
+foo {
+    color: #93AACF;
+    color: #CBE2BA;
+    color: #81BA59;
+    color: #6788BE;
+    color: #FFFFFF;
+    color: #AAAAAA;
+}
+
+@keyframes highlight {
+    0% {
+        transform: scale(1, 1);
+        font-size: 8pt;
+    }
+    100% {
+        transform: scale(2.5, 2.5);
+        font-size: 4pt;
+    }
+}
+
+
+/* Dropdown Selection Box */
+
+select {
+    color: #58585A;
+    background-color: #ffffff;
+    font-weight: bolder;
+}
+
+
+/* all structures */
+
+.map div {
+    position: absolute;
+    font-size: 8pt;
+    border: 1px solid #FAFAFA;
+    background-color: #CBE2BA;
+    box-sizing: border-box;
+    overflow: hidden;
+    z-index: 1;
+}
+
+
+/* structure hover */
+
+div.cube:hover {
+    animation: highlight .1s forwards;
+    background-color: #81BA59;
+    box-shadow: 1px 1px 5px #888888;
+    z-index: 99;
+}
+
+
+/* Cubes */
+
+div.cube {
+    padding-top: 2px;
+    padding-left: 2px;
+    margin: auto;
+    text-align: left;
+}
+
+div.meetingroom {
+    background-color: #93AACF;
+    text-align: center;
+    padding-top: 10px;
+}
+
+
+/* Meeting Room Text */
+
+.map .meetingroom {
+    color: #58585A;
+}
+
+
+/* Cube Text */
+
+.map .cube {
+    font-size: 7pt;
+}
+
+div.office {
+    background-color: #CBE2BA;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 10px;
+}
+
+div.office:hover {
+    animation: highlight .2s forwards;
+    background-color: #81BA59;
+    box-shadow: 1px 1px 5px #888888;
+    z-index: 99;
+}
+
+div.space {
+    padding-top: 10px;
+    background-color: #afafaf;
+    text-align: center;
+}
+
+div.stair {
+    padding-top: 10px;
+    background-color: #58585A;
+    text-align: center;
+}
+
+div.reception {
+    background-color: #bfc566;
+    text-align: center;
+    padding-top: 20px;
+    margin: auto;
+}
+
+.map .reception {
+    color: #99A744;
+}
+
+div.cafe {
+    padding-top: 10px;
+    padding-right: 10px;
+    background-color: #bfc566;
+    text-align: right;
+    border: 0px;
+}
+
+
+/* Cafe Text */
+
+.map .cafe {
+    color: #58585A;
+}
+
+.map .stair {
+    color: #93AACF;
+}
+
+
+/* Utility */
+
+div.utility {
+    padding-top: 10px;
+    background-color: #93AACF;
+    text-align: center;
+}
+
+div.facility {
+    padding-top: 10px;
+    border: solid 1px #e3e3e3;
+    text-align: center;
+    background-color: #93AACF;
+}
+
+div.restroom {
+    padding-top: 10px;
+    border: solid 1px #e3e3e3;
+    background-color: #CEF6F5;
+    text-align: center;
+    /* border: solid 1px #e3e3e3;
+	height: 7px;
+    background-position: center;
+    background-image: url(restrooms.png);
+    background-repeat: no-repeat;
+    top:50px; */
+}
+
+
+/* Not Used Anywhere */
+
+div.void {
+    padding-top: 10px;
+    border: solid 1px #e3e3e3;
+    text-align: center;
+    background-color: #c9c9c9;
+}
+
+
+/* Not Used Anywhere */
+
+div.highlightedStructure {
+    border: solid 1px #000000;
+    background-color: #ff0000;
+}
+
+
+/* Not Used Anywhere */
+
+img.missingPerson {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    /*  filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0); */
+}
+
+
+/* Not Used Anywhere */
+
+span.missingPerson {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 1px;
+    height: 1px;
+    /* filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src="Erik.png"); */
+}
+
+div.quote {
+    left: 140px;
+    bottom: 170px;
+    width: 180px;
+    height: 65px;
+    color: #000000;
+    position: absolute;
+    z-index: 99;
+    text-align: center;
+}
+
+img.bubble {
+    position: absolute;
+    bottom: 90px;
+    left: 95px;
+    display: block;
+    z-index: 98;
+    filter: progid: DXImageTransform.Microsoft.Alpha(opacity=0);
+}
+
+span.bubble {
+    position: absolute;
+    bottom: 90px;
+    left: 100px;
+    width: 500px;
+    height: 500px;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src="Bubble.png");
+}
+
+
+/* Not Used Anywhere */
+
+div.lookup {
+    float: left;
+    position: absolute;
+    border: solid 1px white;
+    top: 0px;
+    left: 0px;
+    padding: 3px;
+    /* background-image: url(HighlightEightyPercent.png); */
+}
+
+div.button {
+    border: solid 1px #58585A;
+    float: right;
+    clear: none;
+    margin-right: 4px;
+    margin-left: 4px;
+    padding-left: 2px;
+    padding-right: 2px;
+    cursor: default;
+}
+
+div.button:hover {
+    background-color: #ffffff;
+}
+
+input {
+    width: 100%;
+}
+
+div.modification {
+    height: 77px;
+    width: 300px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background: #81BA59;
+    box-shadow: 5px 5px 5px #888888;
+}
+
+#modification td {
+    font-size: smaller;
+}
+
+a.rotate {
+    right: 0px;
+    position: absolute;
+    top: 0px;
+    border: none;
+}
+
+a IMG {
+    border: 0px;
+}
+
+a IMG {
+    border: 0px;
+}

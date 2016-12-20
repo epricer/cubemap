@@ -1,0 +1,58 @@
+<html>
+
+<!--[if gte IE 8]>
+    IE is not supported, please view this page in Firefox, Chrome, or other browser.
+<![endif]-->
+
+
+<head>
+    <title>Cube Map</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <META HTTP-EQUIV="Expires" CONTENT="0">
+    <script language="javascript" src="index.js"></script>
+</head>
+
+<body id="body" onload="drawMap();fillEmployeeList();" onresize="drawMap();" scroll="no" style="overflow:hidden;">
+    <div class="title" align="right"><br><br><img src="evolution-payroll-logo.png" height="50" border="0"></a>
+    </div>
+    <div id="map" class="map"></div>
+    <div id="lookup" class="lookup">
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <td><select id="employeelist" onchange="findEmployee(this[this.selectedIndex].text);" NAME="employeelist"></select></td>
+                <td>
+                    <div class="button" onclick="showAddDialog()">add</div>
+                    <div class="button" onclick="showModifyDialog()">edit</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <a href="#" class="rotate" onclick="flipMap();"><img src="rotate2.png" /></a>
+    <img src="mapguy.png" class="missingPerson" onclick="showQuote();" />
+    <span class="missingPerson" onclick="showQuote();"></span>
+    <img src="Bubble.png" id="bubble" class="bubble" style="display:none" />
+    <div id="quote" class="quote" style="display:none"></div>
+    <div id="modification" class="modification" style="display:none;z-index:100;" align="center">
+        <table width="100%" border=0>
+            <tr>
+                <td align="right">Enter Name:</td>
+                <td><input id="EmpName" size=10 NAME="EmpName"></input>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">Location:</td>
+                <td><input id="location" size="20"></input>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="button" onclick="closeModification();">Cancel</div>
+                    <div class="button" onclick="deleteEmployee();">Delete</div>
+                    <div class="button" onclick="commitModification();">Save</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
