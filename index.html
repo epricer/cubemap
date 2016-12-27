@@ -10,26 +10,12 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <META HTTP-EQUIV="Expires" CONTENT="0">
     <script language="javascript" src="index.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 
-<body id="body" onload="drawMap();fillEmployeeList();" onresize="drawMap();" scroll="no" style="overflow:hidden;">
-    <div class="title" align="right"><br><br><img src="evolution-payroll-logo.png" height="50" border="0"></a>
-    </div>
+<body id="body" onload="init();" onresize="drawMap();" onmousemove="swing(event);" scroll="no" style="overflow:hidden;">
     <div id="map" class="map"></div>
-    <div id="lookup" class="lookup">
-        <table cellpadding="0" cellspacing="0">
-            <tr>
-                <td><select id="employeelist" onchange="findEmployee(this[this.selectedIndex].text);" NAME="employeelist"></select></td>
-                <td>
-                    <div class="button" onclick="showAddDialog()">add</div>
-                    <div class="button" onclick="showModifyDialog()">edit</div>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <a href="#" class="rotate" onclick="flipMap();"><img src="rotate2.png" /></a>
     <img src="mapguy.png" class="missingPerson" onclick="showQuote();" />
-    <span class="missingPerson" onclick="showQuote();"></span>
     <img src="Bubble.png" id="bubble" class="bubble" style="display:none" />
     <div id="quote" class="quote" style="display:none"></div>
     <div id="modification" class="modification" style="display:none;z-index:100;" align="center">

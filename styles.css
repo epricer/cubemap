@@ -1,14 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 body {
-    background-position: right;
     font-family: 'Roboto', sans-serif;
     background-color: #FAFAFA;
-    /* page background */
     color: #58585A;
-    /* make edits text */
     border: 0px;
-    margin: 2px;
-    padding: 2px;
+    margin: 0px;
 }
 
 foo {
@@ -18,6 +14,12 @@ foo {
     color: #6788BE;
     color: #FFFFFF;
     color: #AAAAAA;
+}
+
+div.map {
+    position: relative;
+    transform: translate(50px, 50px);
+    /*transform: scale(1.5, 1.5);*/
 }
 
 @keyframes highlight {
@@ -75,7 +77,7 @@ div.cube {
     text-align: left;
 }
 
-div.meetingroom {
+div.meetingrooms {
     background-color: #93AACF;
     text-align: center;
     padding-top: 10px;
@@ -84,7 +86,7 @@ div.meetingroom {
 
 /* Meeting Room Text */
 
-.map .meetingroom {
+.map .meetingrooms {
     color: #58585A;
 }
 
@@ -154,70 +156,30 @@ div.cafe {
 
 /* Utility */
 
-div.utility {
+div.utilities {
     padding-top: 10px;
     background-color: #93AACF;
     text-align: center;
 }
 
-div.facility {
+div.facilities {
     padding-top: 10px;
     border: solid 1px #e3e3e3;
     text-align: center;
     background-color: #93AACF;
 }
 
-div.restroom {
+div.restrooms {
     padding-top: 10px;
     border: solid 1px #e3e3e3;
     background-color: #CEF6F5;
     text-align: center;
-    /* border: solid 1px #e3e3e3;
-	height: 7px;
-    background-position: center;
-    background-image: url(restrooms.png);
-    background-repeat: no-repeat;
-    top:50px; */
 }
-
-
-/* Not Used Anywhere */
-
-div.void {
-    padding-top: 10px;
-    border: solid 1px #e3e3e3;
-    text-align: center;
-    background-color: #c9c9c9;
-}
-
-
-/* Not Used Anywhere */
-
-div.highlightedStructure {
-    border: solid 1px #000000;
-    background-color: #ff0000;
-}
-
-
-/* Not Used Anywhere */
 
 img.missingPerson {
     position: absolute;
     bottom: 0px;
     left: 0px;
-    /*  filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0); */
-}
-
-
-/* Not Used Anywhere */
-
-span.missingPerson {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    width: 1px;
-    height: 1px;
-    /* filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src="Erik.png"); */
 }
 
 div.quote {
@@ -247,19 +209,6 @@ span.bubble {
     width: 500px;
     height: 500px;
     filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src="Bubble.png");
-}
-
-
-/* Not Used Anywhere */
-
-div.lookup {
-    float: left;
-    position: absolute;
-    border: solid 1px white;
-    top: 0px;
-    left: 0px;
-    padding: 3px;
-    /* background-image: url(HighlightEightyPercent.png); */
 }
 
 div.button {

@@ -12,7 +12,7 @@
 	<employee name="Melissa Marcone" structurename="1409"></employee>
 	<employee name="Carolyn Brinkworth" structurename="1201"></employee>
 	<employee name="Barb Conte" structurename="1303"></employee>
-	<employee name="Will Roberts" structurename="1302"></employee>
+	<employee name="Will Roberts" structurename="1306"></employee>
 	<employee name="Kari Hancock" structurename="1203"></employee>
 	<employee name="Glenn Gamblin" structurename="1031"></employee>
 	<employee name="Ken Schofield" structurename="1014"></employee>
@@ -50,4 +50,5 @@
 	<employee name="Jennifer Minns" structurename="1117"></employee>
 	<employee name="Neil Skinner" structurename="1115"></employee>
 	<employee name="Foo" structurename="Bar"></employee>
+	<employee name="Bob" structurename="1306"></employee>
 </employees>
