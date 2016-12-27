@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<map width="65" height="50">
+<map width="65" height="55">
 <!-- cube numbering scheme: right to left, bottom to top aligned to coordinate origin x="0", y="0" at right bottom (south east)-->
 	<structures>
 		<cubes>
@@ -11,6 +11,8 @@
 			<cube name="1004" x="4" y="13" width="2" height="2" />
 			<cube name="1006" x="8" y="11" width="2" height="2" />
 			
+			<cube name="origin" x="0" y="0" width="1" height="1" />
+
 			<cube name="1007" x="16" y="12" width="2" height="2" />
 			<cube name="1008" x="14" y="13" width="2" height="2" />
 			<cube name="1009" x="12" y="14" width="2" height="2" />

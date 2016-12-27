@@ -1,7 +1,3 @@
-var PADDING_RIGHT = 15;
-var PADDING_LEFT = 15;
-var PADDING_TOP = 70;
-var PADDING_BOTTOM = 15;
 var employeesDocument = null;
 var mapDocument = null;
 var quotesDocument = null;
@@ -9,8 +5,13 @@ var quoteTimer = null;
 var foundStructure = null;
 var flipCookie = getCookie("flip");
 var highLightedColor = "#bfc566";
+var PADDING_BOTTOM = 20;
+var employeeModel;
+var structures;
+var mapModel;
 
-flip = ((flipCookie == "") || (flipCookie == null) || (flipCookie == "true")) ? true : false;
+flip = ((flipCookie === "") || (flipCookie === null) || (flipCookie == "true")) ? true : false;
+
 
 function Structure(description, type, x, y, width, height) {
     this.description = description;
@@ -21,95 +22,84 @@ function Structure(description, type, x, y, width, height) {
     this.height = height;
 }
 
+function swing(event) {
+    var canvasWidth = document.body.clientWidth;
+    var midPoint = canvasWidth / 2;
+    var shiftPct = (midPoint - event.x) / event.x;
+    var shiftAbsolute = shiftPct * ((canvasWidth * 1.5) - (canvasWidth));
+    //console.log("translate(" + shiftAbsolute + "px, 0px);");
+    var mapElement = document.getElementById("map");
+    //document.getElementById("map").style.transform = "translate(90px, 90px);";
+}
+
 function cacheBust(url) {
     return url + "?d=" + new Date().getTime();
 }
 
-function fillEmployeeList() {
-    try {
-        var employeelist = document.getElementById("employeelist");
-        document.getElementById("employeelist").innerHTML = '';
-        var employees = getEmployees();
-
-        //sort the list by name
-        var sortedList = new Array();
-        for (var i = 0; i < employees.childNodes.length; i++) {
-            if (1 == employees.childNodes[i].nodeType) {
-                sortedList.push(employees.childNodes[i].getAttribute("name") + "," + employees.childNodes[i].getAttribute("structurename"));
-            }
-        }
-        sortedList = sortedList.sort();
-
-        //run thru the sorted array and build the options
-        var empOption = document.createElement("option");
-        empOption.text = "Select an Employee";
-        empOption.value = "0";
-        employeelist.options.add(empOption);
-        for (var i = 0; i < sortedList.length; i++) {
-            var splitValue = sortedList[i].split(",");
-            empOption = document.createElement("option");
-            empOption.text = splitValue[0];
-            empOption.value = splitValue[1];
-            employeelist.options.add(empOption);
-        }
-    } catch (e) {
-        alert(e);
-    }
-}
 
 function drawMap() {
-    try {
-        getMap().innerHTML = "";
-        var mapNode = selectNodes(getMapDocument(), "/map")[0];
-        var mapWidth = mapNode.getAttribute("width");
-        var mapHeight = mapNode.getAttribute("height");
-        drawStructures(getStructures(getMapDocument(), "cubes"), mapWidth, mapHeight, flip);
-        drawStructures(getStructures(getMapDocument(), "meetingrooms"), mapWidth, mapHeight, flip);
-        drawStructures(getStructures(getMapDocument(), "stairs"), mapWidth, mapHeight, flip);
-        drawStructures(getStructures(getMapDocument(), "utilities"), mapWidth, mapHeight, flip);
-        drawStructures(getStructures(getMapDocument(), "offices"), mapWidth, mapHeight, flip);
-        drawStructures(getStructures(getMapDocument(), "voids"), mapWidth, mapHeight, flip);
-        drawStructures(getStructures(getMapDocument(), "facilities"), mapWidth, mapHeight, flip);
-        drawStructures(getStructures(getMapDocument(), "restroom"), mapWidth, mapHeight, flip);
-    } catch (e) {
-        alert(e);
-    }
+    var mapElement = getMap();
+    mapElement.innerHTML = "";
+    var mapWidth = mapModel.width;
+    var mapHeight = mapModel.height;
+    mapElement.style.width = getCanvasWidth(mapWidth, mapHeight);
+    mapElement.style.height = getCanvasHeight(mapWidth, mapHeight);
+    drawStructures(mapModel.structures.cubes, mapWidth, mapHeight, flip, "cube");
+    drawStructures(mapModel.structures.meetingrooms, mapWidth, mapHeight, flip, "meetingrooms");
+    drawStructures(mapModel.structures.stairs, mapWidth, mapHeight, flip, "stairs");
+    drawStructures(mapModel.structures.utilities, mapWidth, mapHeight, flip, "utilities");
+    drawStructures(mapModel.structures.offices, mapWidth, mapHeight, flip, "offices");
+    drawStructures(mapModel.structures.voids, mapWidth, mapHeight, flip, "voids");
+    drawStructures(mapModel.structures.facilities, mapWidth, mapHeight, flip, "facilities");
+    drawStructures(mapModel.structures.restrooms, mapWidth, mapHeight, flip, "restrooms");
 }
 
-function drawStructures(structures, mapWidth, mapHeight, flip) {
+function init() {
+    $.when(
+        jQuery.getJSON("/employees.json", function(data) {
+            employeeModel = data;
+        }),
+        jQuery.getJSON("/map.json", function(data) {
+            mapModel = data;
+        })
+    ).then(function() {
+        drawMap();
+    });
+}
+
+
+function drawStructures(structures, mapWidth, mapHeight, flip, type) {
     var xScale = getXScale(mapWidth, mapHeight);
     var yScale = getYScale(mapWidth, mapHeight);
     for (var i = 0; i < structures.length; i++) {
         var structureWidget = document.createElement("div");
-        structureWidget.className = structures[i].type;
-        structureWidget.type = structures[i].type;
+        structureWidget.className = type;
+        structureWidget.type = type;
         structureWidget.style.width = structures[i].width * xScale;
         structureWidget.style.height = structures[i].height * yScale;
         structureWidget.setAttribute("originalWidth", structures[i].width * xScale);
         structureWidget.setAttribute("originalHeight", structures[i].height * xScale);
+        structureWidget.innerHTML = structures[i].name;
+        structureWidget.id = structures[i].name;
 
-        if (structureWidget.type == "cube") {
-            var employeeName = getEmployeeNameByStructure(structures[i].description);
-            if (employeeName != null) {
-                var nameComponents = employeeName.split(" ");
+        if (type == "cube") {
+            var employee = getEmployeeByStructure(structures[i].name);
+            structureWidget.onclick = editStructure;
+            structureWidget.style.cursor = "hand";
+            if (employee !== null) {
+                var nameComponents = employee.name.split(" ");
                 structureWidget.innerHTML = nameComponents.join("<br />");
-                structureWidget.style.cursor = "hand";
-                structureWidget.onclick = editStructure;
-            } else {
-                structureWidget.innerHTML = structures[i].description;
             }
-        } else {
-            structureWidget.innerHTML = structures[i].description;
         }
-        structureWidget.id = structures[i].description;
+        structureWidget.id = structures[i].name;
         var x;
         var y;
         if (flip) {
-            x = (mapWidth - structures[i].x - structures[i].width) * xScale + PADDING_LEFT;
-            y = (mapHeight - structures[i].y - structures[i].height) * yScale + PADDING_TOP;
+            x = (mapWidth - structures[i].x - structures[i].width) * xScale;
+            y = (mapHeight - structures[i].y - structures[i].height) * yScale;
         } else {
-            x = structures[i].x * xScale + PADDING_LEFT;
-            y = structures[i].y * yScale + PADDING_TOP;
+            x = structures[i].x * xScale;
+            y = structures[i].y * yScale;
         }
         structureWidget.style.left = x;
         structureWidget.style.top = y;
@@ -120,9 +110,7 @@ function drawStructures(structures, mapWidth, mapHeight, flip) {
 function editStructure(e) {
     var target = (e) ? e.target : window.event.srcElement;
     if (target.type == "cube") {
-        var employeelist = document.getElementById("employeelist");
-        employeelist.value = target.id;
-        showModifyDialog();
+        showModifyDialog(target.id);
     }
 }
 
@@ -135,14 +123,14 @@ function getYScale(mapWidth, mapHeight) {
 }
 
 function getCanvasWidth(mapWidth, mapHeight) {
-    var maxWidth = document.body.clientWidth - PADDING_RIGHT - PADDING_LEFT;
-    var maxHeight = document.body.clientHeight - PADDING_TOP;
+    var maxWidth = document.body.clientWidth;
+    var maxHeight = document.body.clientHeight;
     return Math.min(maxWidth, (mapWidth / mapHeight) * maxHeight);
 }
 
 function getCanvasHeight(mapWidth, mapHeight) {
-    var maxWidth = document.body.clientWidth - PADDING_RIGHT - PADDING_LEFT;
-    var maxHeight = document.body.clientHeight - PADDING_TOP - PADDING_BOTTOM;
+    var maxWidth = document.body.clientWidth;
+    var maxHeight = document.body.clientHeight - PADDING_BOTTOM;
     return Math.min(maxHeight, (mapHeight / mapWidth) * maxWidth);
 }
 
@@ -174,18 +162,6 @@ function getMap() {
     return document.getElementById("map");
 }
 
-function getStructures(mapDocument, type) {
-    var structureGroupNode = selectNodes(mapDocument, "/map/structures/" + type)[0];
-    var result = [];
-    for (var i = 0; i < structureGroupNode.childNodes.length; i++) {
-        var structureNode = structureGroupNode.childNodes[i];
-        if (structureNode.nodeType == 1) {
-            var structure = new Structure(structureNode.getAttribute("name"), structureNode.nodeName, structureNode.getAttribute("x"), structureNode.getAttribute("y"), structureNode.getAttribute("width"), structureNode.getAttribute("height"));
-            result.push(structure);
-        }
-    }
-    return result;
-}
 
 function getEmployees() {
     return selectNodes(getEmployeesDocument(), "/employees")[0];
@@ -212,24 +188,23 @@ function getQuotes() {
 }
 
 function getQuotesDocument() {
-    if (quotesDocument == null) quotesDocument = loadXMLDoc("Quotes.xml");
+    if (quotesDocument === null) quotesDocument = loadXMLDoc("Quotes.xml");
     return quotesDocument;
 }
 
-function getEmployeeNameByStructure(structureName) {
-    var employeeNode = selectNodes(getEmployees(), "employee[@structurename='" + structureName + "']")[0];
-    if (employeeNode != null) {
-        return employeeNode.getAttribute("name");
-    } else {
-        return null;
+function getEmployeeByStructure(structureName) {
+
+    for (var i = 0; i < employeeModel.length; i++) {
+        if (employeeModel[i].structure === structureName) return employeeModel[i];
     }
+    return null;
 }
 
 function showQuote() {
     document.getElementById("bubble").style.display = "block";
     document.getElementById("quote").style.display = "block";
     document.getElementById("quote").innerHTML = getQuote();
-    window.setTimeout("hideQuote()", 3000);
+    window.setTimeout(hideQuote, 3000);
 }
 
 function showQuote() {
@@ -237,7 +212,7 @@ function showQuote() {
     document.getElementById("bubble").style.display = "block";
     document.getElementById("quote").style.display = "block";
     document.getElementById("quote").innerHTML = getQuote();
-    quoteTimer = window.setTimeout("hideQuote()", 3000);
+    quoteTimer = window.setTimeout(hideQuote, 3000);
 }
 
 function hideQuote() {
@@ -250,48 +225,27 @@ function isIe() {
     return (document.all) ? true : false;
 }
 
-function showModifyDialog() {
-    var map = document.getElementById("map").style.opacity = .2;
+function showModifyDialog(structureName) {
+    var employee = getEmployeeByStructure(structureName);
+    var employeeName = (employee === null) ? "" : employee.name;
+
+    var map = document.getElementById("map").style.opacity = 0.2;
     var dialog = document.getElementById("modification");
     var lookup = document.getElementById("lookup");
-    var selector = document.getElementById("employeelist");
-    var name = selector[selector.selectedIndex].text;
-    var employee = selectNodes(getEmployees(), "employee[@name='" + name + "']")[0];
-    if (employee != null) {
-        document.getElementById("location").value = employee.getAttribute("structurename");
-        document.getElementById("EmpName").value = employee.getAttribute("name");
-    } else {
-        document.getElementById("location").value = "";
-        document.getElementById("EmpName").value = "";
-    }
-    dialog.style.display = "block";
-}
-
-function showAddDialog() {
-    var map = document.getElementById("map").style.opacity = .2;
-
-    var dialog = document.getElementById("modification");
-    var lookup = document.getElementById("lookup");
-    var selector = document.getElementById("employeelist");
-    var name = selector[selector.selectedIndex].text;
-    var employee = selectNodes(getEmployees(), "employee[@name='" + name + "']")[0];
-    document.getElementById("location").value = "";
-    document.getElementById("EmpName").value = "";
+    $("#location").val(structureName);
+    $("#EmpName").val(employeeName);
+    $("#EmpName").data("oldvalue", employeeName);
     dialog.style.display = "block";
 }
 
 function closeModification() {
     var map = document.getElementById("map").style.opacity = 1;
-
     var dialog = document.getElementById("modification");
-    var lookup = document.getElementById("lookup");
     dialog.style.display = "none";
 }
 
-function deleteEmployee() {
-    var selector = document.getElementById("employeelist");
-    var name = trimWhitespace(document.getElementById("EmpName").value);
-    if (name == "")
+function deleteEmployee(name) {
+    if (name === "")
         alert("You must select a name to delete");
     else {
         var bConfirm = confirm("Are you sure you want to delete this employee?");
@@ -304,23 +258,20 @@ function deleteEmployee() {
             }
         }
     }
-
-
 }
 
 function commitModification() {
-    var selector = document.getElementById("employeelist");
-    var name = trimWhitespace(document.getElementById("EmpName").value);
-    var slocation = trimWhitespace(document.getElementById("location").value);
-    if ((name == "") || (slocation == "") | (name.split(" ").length > 2)) {
+
+    var employeeName = trimWhitespace($("#EmpName").val());
+    var newLocation = trimWhitespace($("#location").val());
+    if ((employeeName === "") || (newLocation === "")) {
         alert("You must enter a name (Firstname Lastname) and provide a location (cube number)");
     } else {
-        req = new XMLHttpRequest();
-        if (req) {
-            req.open("POST", "/setlocation?name=" + encodeURIComponent(name) + "&location=" + encodeURIComponent(slocation), false);
-            isIe() ? req.send() : req.send();
-            location.href = "index.html";
-        }
+        $.post("/setlocation", JSON.stringify({ "name": employeeName, "structure": newLocation, "previousname": $("#EmpName").data("oldvalue") }))
+            .done(function(data) {
+                closeModification();
+                init();
+            });
     }
 }
 

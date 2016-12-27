@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/xml"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -23,64 +23,79 @@ func main() {
 }
 
 func setLocation(w http.ResponseWriter, req *http.Request) {
-	var params = req.URL.Query()
 
-	var name = params["name"][0]
-	var location = params["location"][0]
-	var delete = len(params["delete"]) > 0
-
-	xmlFile, err := ioutil.ReadFile(rootPath + "/employees.xml")
+	var newEmpInfo change
+	if req.Body == nil {
+		log.Printf("Request body is nil")
+		http.Error(w, "Please send a request body", 400)
+		return
+	}
+	err := json.NewDecoder(req.Body).Decode(&newEmpInfo)
 	if err != nil {
-		log.Printf("Could not open %v/employees.xml for editing. Reason: %v", rootPath, err)
+		log.Printf("error decoding request: %+v", err)
+		http.Error(w, err.Error(), 400)
 		return
 	}
 
-	doc := employees{}
-	err = xml.Unmarshal(xmlFile, &doc)
+	fileBytes, e := ioutil.ReadFile(rootPath + "/employees.json")
+	if e != nil {
+		fmt.Printf("File error: %v\n", e)
+		return
+	}
+
+	employeeList := make([]employee, 0)
+
 	if err != nil {
-		log.Printf("Could not unmarshal %v/employees.xml for editing. Reason: %v", rootPath, err)
+		log.Printf("Could not open %v/employees.json for editing. Reason: %v", rootPath, err)
+		return
+	}
+
+	err = json.Unmarshal(fileBytes, &employeeList)
+	log.Printf("employee list from file: %+v", employeeList)
+
+	if err != nil {
+		log.Printf("Could not decode %v/employees.json for editing. Reason: %v", rootPath, err)
 		return
 	}
 
 	var found = false
-	for i, employee := range doc.Employees {
-		if employee.Name == name {
+	for i, employee := range employeeList {
+		log.Printf("Comparing to %+v", employee)
+		if employee.Name == newEmpInfo.PreviousName {
 			found = true
-			if delete {
-				doc.Employees = append(doc.Employees[:i], doc.Employees[i+1:]...)
-			} else {
-				employee.StructureName = location
-				doc.Employees[i] = employee
-			}
+			employee.Structure = newEmpInfo.Structure
+			employee.Name = newEmpInfo.Name
+			employeeList[i] = employee
 			break
 		}
 	}
 
-	if !found && !delete {
-		// add
-		doc.Employees = append(doc.Employees, employee{XMLName: xml.Name{Local: "employee"}, Name: name, StructureName: location})
+	if !found {
+		// add'
+		log.Printf("Adding %+v", newEmpInfo)
+		employeeList = append(employeeList, employee{Name: newEmpInfo.Name, Structure: newEmpInfo.Structure})
 	}
 
-	outbytes, err := xml.MarshalIndent(doc, "", "\t")
+	outbytes, err := json.MarshalIndent(employeeList, "", "\t")
+	log.Printf("employee list: %+v", employeeList)
 	if err != nil {
-		log.Printf("Could not unmarshal to xml. Reason: %v", err)
+		log.Printf("Could not unmarshal to json. Reason: %v", err)
 		return
 	}
 
-	err = ioutil.WriteFile(rootPath+"/employees.xml", outbytes, 0644)
+	err = ioutil.WriteFile(rootPath+"/employees.json", outbytes, 0644)
 	if err != nil {
-		log.Printf("Could not write %v/employees.xml. Reason: %v", rootPath, err)
+		log.Printf("Could not write %v/employees.jsonxml. Reason: %v", rootPath, err)
 		return
 	}
-}
-
-type employees struct {
-	XMLName   xml.Name   `xml:"employees"`
-	Employees []employee `xml:"employee"`
 }
 
 type employee struct {
-	XMLName       xml.Name `xml:"employee"`
-	Name          string   `xml:"name,attr"`
-	StructureName string   `xml:"structurename,attr"`
+	Name      string `json:"name"`
+	Structure string `json:"structure"`
+}
+type change struct {
+	Name         string `json:"name"`
+	Structure    string `json:"structure"`
+	PreviousName string `json:"previousname"`
 }
