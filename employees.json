@@ -1,209 +1,210 @@
-[{
-        "name": "Rob Mount",
-        "structure": "1508"
-    },
-    {
-        "name": "Jacob Bliss",
-        "structure": "1505"
-    },
-    {
-        "name": "Mouhui Huang",
-        "structure": "1503"
-    },
-    {
-        "name": "Katie Clow",
-        "structure": "1401"
-    },
-    {
-        "name": "Mike Blake",
-        "structure": "1301"
-    },
-    {
-        "name": "Daryl Cronin",
-        "structure": "1113"
-    },
-    {
-        "name": "Jaimey Pecor",
-        "structure": "1007"
-    },
-    {
-        "name": "Asia Roque",
-        "structure": "1008"
-    },
-    {
-        "name": "Damon Serrantonio",
-        "structure": "1304"
-    },
-    {
-        "name": "Cheri Little",
-        "structure": "1305"
-    },
-    {
-        "name": "Melissa Marcone",
-        "structure": "1409"
-    },
-    {
-        "name": "Carolyn Brinkworth",
-        "structure": "1201"
-    },
-    {
-        "name": "Barb Conte",
-        "structure": "1303"
-    },
-    {
-        "name": "Will Roberts",
-        "structure": "1306"
-    },
-    {
-        "name": "Kari Hancock",
-        "structure": "1203"
-    },
-    {
-        "name": "Glenn Gamblin",
-        "structure": "1031"
-    },
-    {
-        "name": "Ken Schofield",
-        "structure": "1014"
-    },
-    {
-        "name": "Dan Swain",
-        "structure": "1507"
-    },
-    {
-        "name": "Benjamin Bannerman",
-        "structure": "1024"
-    },
-    {
-        "name": "Tracy Weeks",
-        "structure": "1030"
-    },
-    {
-        "name": "Alyssa Benedict",
-        "structure": "1202"
-    },
-    {
-        "name": "George Lam",
-        "structure": "1028"
-    },
-    {
-        "name": "AJ Twombly",
-        "structure": "1005"
-    },
-    {
-        "name": "Benjamin Dickhaut",
-        "structure": "1011"
-    },
-    {
-        "name": "Oleg Mitin",
-        "structure": "1002"
-    },
-    {
-        "name": "Denning Coates",
-        "structure": "1032"
-    },
-    {
-        "name": "Colby Nadeau",
-        "structure": "1402"
-    },
-    {
-        "name": "Ben Kingsbury",
-        "structure": "1405"
-    },
-    {
-        "name": "Al Ramirez",
-        "structure": "1018"
-    },
-    {
-        "name": "Chuck Megivern",
-        "structure": "1013"
-    },
-    {
-        "name": "Kayla Tanch",
-        "structure": "1208"
-    },
-    {
-        "name": "Linda Darling",
-        "structure": "1118"
-    },
-    {
-        "name": "Fordyce Garfield",
-        "structure": "1027"
-    },
-    {
-        "name": "Ted Pricer",
-        "structure": "Ted Pricer"
-    },
-    {
-        "name": "Nancy Howard",
-        "structure": "1114"
-    },
-    {
-        "name": "Samantha Clark",
-        "structure": "1009"
-    },
-    {
-        "name": "Justin Griffing",
-        "structure": "1012"
-    },
-    {
-        "name": "Steve Wallace",
-        "structure": "1019"
-    },
-    {
-        "name": "Sergey Krivov",
-        "structure": "1029"
-    },
-    {
-        "name": "Jake Seymour",
-        "structure": "1104"
-    },
-    {
-        "name": "Doug Underhill",
-        "structure": "1006"
-    },
-    {
-        "name": "Lucy Carrasco",
-        "structure": "1004"
-    },
-    {
-        "name": "Gus Lasko",
-        "structure": "1003"
-    },
-    {
-        "name": "Andrew Quartey",
-        "structure": "1001"
-    },
-    {
-        "name": "Ryan Jacobs",
-        "structure": "1022"
-    },
-    {
-        "name": "Jennifer Nicholson",
-        "structure": "1025"
-    },
-    {
-        "name": "Jeffrey Pierre",
-        "structure": "1026"
-    },
-    {
-        "name": "Jennifer Cozine",
-        "structure": "1206"
-    },
-    {
-        "name": "Jennifer Minns",
-        "structure": "1117"
-    },
-    {
-        "name": "Neil Skinner",
-        "structure": "1115"
-    },
-    {
-        "name": "Foo",
-        "structure": "Bar"
-    },
-    {
-        "name": "Bob",
-        "structure": "1306"
-    }
+[
+	{
+		"name": "Rob Mount",
+		"structure": "1508"
+	},
+	{
+		"name": "Jacob Bliss",
+		"structure": "1505"
+	},
+	{
+		"name": "Mouhui Huang",
+		"structure": "1503"
+	},
+	{
+		"name": "Katie Clow",
+		"structure": "1401"
+	},
+	{
+		"name": "Mike Blake",
+		"structure": "1301"
+	},
+	{
+		"name": "Daryl Cronin",
+		"structure": "1113"
+	},
+	{
+		"name": "Jaimey Pecor",
+		"structure": "1007"
+	},
+	{
+		"name": "Asia Roque",
+		"structure": "1008"
+	},
+	{
+		"name": "Damon Serrantonio",
+		"structure": "1304"
+	},
+	{
+		"name": "Cheri Little",
+		"structure": "1305"
+	},
+	{
+		"name": "Melissa Marcone",
+		"structure": "1409"
+	},
+	{
+		"name": "Carolyn Brinkworth",
+		"structure": "1201"
+	},
+	{
+		"name": "Barb Conte",
+		"structure": "1303"
+	},
+	{
+		"name": "Will Roberts",
+		"structure": "1306"
+	},
+	{
+		"name": "Kari Hancock",
+		"structure": "1203"
+	},
+	{
+		"name": "Glenn Gamblin",
+		"structure": "1031"
+	},
+	{
+		"name": "Ken Schofield",
+		"structure": "1014"
+	},
+	{
+		"name": "Dan Swain",
+		"structure": "1507"
+	},
+	{
+		"name": "Benjamin Bannerman",
+		"structure": "1024"
+	},
+	{
+		"name": "Tracy Weeks",
+		"structure": "1030"
+	},
+	{
+		"name": "Alyssa Benedict",
+		"structure": "1202"
+	},
+	{
+		"name": "George Lam",
+		"structure": "1028"
+	},
+	{
+		"name": "AJ Twombly",
+		"structure": "1005"
+	},
+	{
+		"name": "Benjamin Dickhaut",
+		"structure": "1011"
+	},
+	{
+		"name": "Oleg Mitin",
+		"structure": "1002"
+	},
+	{
+		"name": "Denning Coates",
+		"structure": "1032"
+	},
+	{
+		"name": "Colby Nadeau",
+		"structure": "1402"
+	},
+	{
+		"name": "Ben Kingsbury",
+		"structure": "1405"
+	},
+	{
+		"name": "Al Ramirez",
+		"structure": "1018"
+	},
+	{
+		"name": "Chuck Megivern",
+		"structure": "1013"
+	},
+	{
+		"name": "Kayla Tanch",
+		"structure": "1208"
+	},
+	{
+		"name": "Linda Darling",
+		"structure": "1118"
+	},
+	{
+		"name": "Fordyce Garfield",
+		"structure": "1027"
+	},
+	{
+		"name": "Ted Pricer",
+		"structure": "Ted Pricer"
+	},
+	{
+		"name": "Nancy Howard",
+		"structure": "1114"
+	},
+	{
+		"name": "Samantha Clark",
+		"structure": "1009"
+	},
+	{
+		"name": "Justin Griffing",
+		"structure": "1012"
+	},
+	{
+		"name": "Steve Wallace",
+		"structure": "1019"
+	},
+	{
+		"name": "Sergey Krivov",
+		"structure": "1029"
+	},
+	{
+		"name": "Jake Seymour",
+		"structure": "1104"
+	},
+	{
+		"name": "Doug Underhill",
+		"structure": "1006"
+	},
+	{
+		"name": "Lucy Carrasco",
+		"structure": "1004"
+	},
+	{
+		"name": "Gus Lasko",
+		"structure": "1003"
+	},
+	{
+		"name": "Andrew Quartey",
+		"structure": "1001"
+	},
+	{
+		"name": "Ryan Jacobs",
+		"structure": "1022"
+	},
+	{
+		"name": "Jennifer Nicholson",
+		"structure": "1025"
+	},
+	{
+		"name": "Jeffrey Pierre",
+		"structure": "1026"
+	},
+	{
+		"name": "Jennifer Cozine",
+		"structure": "1206"
+	},
+	{
+		"name": "Jennifer Minns",
+		"structure": "1117"
+	},
+	{
+		"name": "Neil Skinner",
+		"structure": "1115"
+	},
+	{
+		"name": "Foo",
+		"structure": "Bar"
+	},
+	{
+		"name": "Bob",
+		"structure": "1306"
+	}
 ]

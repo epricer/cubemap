@@ -5,7 +5,7 @@ var quoteTimer = null;
 var foundStructure = null;
 var flipCookie = getCookie("flip");
 var highLightedColor = "#bfc566";
-var PADDING_BOTTOM = 20;
+var PADDING_BOTTOM = 0;
 var employeeModel;
 var structures;
 var mapModel;
@@ -22,15 +22,39 @@ function Structure(description, type, x, y, width, height) {
     this.height = height;
 }
 
-function swing(event) {
-    var canvasWidth = document.body.clientWidth;
-    var midPoint = canvasWidth / 2;
-    var shiftPct = (midPoint - event.x) / event.x;
-    var shiftAbsolute = shiftPct * ((canvasWidth * 1.5) - (canvasWidth));
-    //console.log("translate(" + shiftAbsolute + "px, 0px);");
-    var mapElement = document.getElementById("map");
-    //document.getElementById("map").style.transform = "translate(90px, 90px);";
+
+function trackCursor(mouseEvent) {
+    var xPosition = mouseEvent.x / getWindowWidth();
+    var yPosition = mouseEvent.y / getWindowHeight();
+
+    var left = (getWindowWidth() - getZoomWidth()) * xPosition;
+    var top = (getWindowHeight() - getZoomHeight()) * yPosition;
+    $("#map").css("left", left);
+    $("#map").css("top", top);
+    /*$("#map").css("transition", ".5s");
+    $("#map").css("transition-delay", ".02s");*/
 }
+
+function getScale() {
+    return 1.3;
+}
+
+function getWindowWidth() {
+    return $(window).width();
+}
+
+function getWindowHeight() {
+    return $(window).height();
+}
+
+function getZoomWidth() {
+    return getWindowWidth() * getScale();
+}
+
+function getZoomHeight() {
+    return getWindowHeight() * getScale();
+}
+
 
 function cacheBust(url) {
     return url + "?d=" + new Date().getTime();
@@ -42,8 +66,6 @@ function drawMap() {
     mapElement.innerHTML = "";
     var mapWidth = mapModel.width;
     var mapHeight = mapModel.height;
-    mapElement.style.width = getCanvasWidth(mapWidth, mapHeight);
-    mapElement.style.height = getCanvasHeight(mapWidth, mapHeight);
     drawStructures(mapModel.structures.cubes, mapWidth, mapHeight, flip, "cube");
     drawStructures(mapModel.structures.meetingrooms, mapWidth, mapHeight, flip, "meetingrooms");
     drawStructures(mapModel.structures.stairs, mapWidth, mapHeight, flip, "stairs");
@@ -55,6 +77,8 @@ function drawMap() {
 }
 
 function init() {
+    $("#map").css("transform", "scale(" + getScale() + "," + getScale() + ")");
+
     $.when(
         jQuery.getJSON("/employees.json", function(data) {
             employeeModel = data;
@@ -244,20 +268,26 @@ function closeModification() {
     dialog.style.display = "none";
 }
 
-function deleteEmployee(name) {
+function deleteEmployee() {
+    var name = trimWhitespace($("#EmpName").val());
+
     if (name === "")
         alert("You must select a name to delete");
     else {
-        var bConfirm = confirm("Are you sure you want to delete this employee?");
-        if (bConfirm) {
-            req = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-            if (req) {
-                req.open("POST", "SetLocation.asp?name=" + encodeURIComponent(name) + "&delete=Y", false);
-                isIe() ? req.send() : req.send(null);
-                location.href = "index.html";
-            }
+        if (confirm("Are you sure you want to delete this employee?")) {
+            $.post("/delete?name=" + name)
+                .done(function(data) {
+                    closeModification();
+                    init();
+                });
         }
     }
+
+    $.post("/setlocation", JSON.stringify({ "name": employeeName, "structure": newLocation, "previousname": $("#EmpName").data("oldvalue") }))
+        .done(function(data) {
+            closeModification();
+            init();
+        });
 }
 
 function commitModification() {

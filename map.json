@@ -1,6 +1,6 @@
 {
-    "width": "65",
-    "height": "55",
+    "width": "55",
+    "height": "53",
 
     "structures": {
         "cubes": [{
@@ -44,13 +44,6 @@
                 "y": "11",
                 "width": "2",
                 "height": "2"
-            },
-            {
-                "name": "origin",
-                "x": "0",
-                "y": "0",
-                "width": "1",
-                "height": "1"
             },
             {
                 "name": "1007",

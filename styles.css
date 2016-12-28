@@ -17,9 +17,8 @@ foo {
 }
 
 div.map {
-    position: relative;
-    transform: translate(50px, 50px);
-    /*transform: scale(1.5, 1.5);*/
+    position: fixed;
+    /*transform: translate(50px, 50px);*/
 }
 
 @keyframes highlight {
@@ -32,6 +31,19 @@ div.map {
         transform: scale(2.5, 2.5);
         font-size: 4pt;
         border-radius: 5px;
+    }
+}
+
+@keyframes unhighlight {
+    0% {
+        transform: scale(2.5, 2.5);
+        border-radius: 0px;
+        font-size: 4pt;
+    }
+    100% {
+        transform: scale(1, 1);
+        font-size: 8pt;
+        border-radius: 0px;
     }
 }
 
@@ -67,10 +79,18 @@ div.cube:hover {
     z-index: 99;
 }
 
+div.offices:hover {
+    animation: highlight .1s forwards;
+    background-color: #81BA59;
+    box-shadow: 1px 1px 5px #888888;
+    z-index: 99;
+}
+
 
 /* Cubes */
 
 div.cube {
+    animation: unhighlight .1s forwards;
     padding-top: 2px;
     padding-left: 2px;
     margin: auto;
@@ -102,13 +122,6 @@ div.office {
     text-align: center;
     vertical-align: middle;
     padding-top: 10px;
-}
-
-div.office:hover {
-    animation: highlight .2s forwards;
-    background-color: #81BA59;
-    box-shadow: 1px 1px 5px #888888;
-    z-index: 99;
 }
 
 div.space {
