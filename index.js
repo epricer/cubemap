@@ -66,7 +66,7 @@ function drawMap() {
         drawStructures(mapModel.structures[property], mapWidth, mapHeight, property);
     }
 }
-margin
+
 
 function init() {
     $("#map").css("transform", "scale(" + getZoom() + "," + getZoom() + ")");
@@ -140,10 +140,10 @@ function selectNodes(node, xpathExpression) {
 
 function loadXMLDoc(url) {
     var req;
-    req = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    req = new XMLHttpRequest();
     if (req) {
         req.open("GET", cacheBust(url), false);
-        isIe() ? req.send() : req.send(null);
+        req.send(null);
         return req.responseXML;
     }
 }
@@ -154,24 +154,10 @@ function getMap() {
 }
 
 
-function getEmployees() {
-    return selectNodes(getEmployeesDocument(), "/employees")[0];
-}
-
-function getEmployeesDocument() {
-    if (employeesDocument == null) employeesDocument = loadXMLDoc("employees.xml");
-    return employeesDocument;
-}
-
-function getMapDocument() {
-    if (mapDocument == null) mapDocument = loadXMLDoc("Map.xml");
-    return mapDocument;
-}
-
 function getQuote() {
     var quotesNodes = getQuotes();
     var i = Math.round(Math.random() * (quotesNodes.length - 1));
-    return (isIe()) ? quotesNodes[i].text : quotesNodes[i].textContent;
+    return quotesNodes[i].textContent;
 }
 
 function getQuotes() {
@@ -192,13 +178,6 @@ function getEmployeeByStructure(structureName) {
 }
 
 function showQuote() {
-    document.getElementById("bubble").style.display = "block";
-    document.getElementById("quote").style.display = "block";
-    document.getElementById("quote").innerHTML = getQuote();
-    window.setTimeout(hideQuote, 3000);
-}
-
-function showQuote() {
     hideQuote();
     document.getElementById("bubble").style.display = "block";
     document.getElementById("quote").style.display = "block";
@@ -212,55 +191,42 @@ function hideQuote() {
     document.getElementById("quote").style.display = "none";
 }
 
-function isIe() {
-    return (document.all) ? true : false;
-}
-
 function showModifyDialog(structureName) {
     var employee = getEmployeeByStructure(structureName);
     var employeeName = (employee === null) ? "" : employee.name;
 
-    var map = document.getElementById("map").style.opacity = 0.2;
-    var dialog = document.getElementById("modification");
-    var lookup = document.getElementById("lookup");
+    $("#map").css("opacity", 0.2);
     $("#location").val(structureName);
     $("#EmpName").val(employeeName);
     $("#EmpName").data("oldvalue", employeeName);
-    dialog.style.display = "block";
+    $("#modification").css("display", "block");
 }
 
 function closeModification() {
-    var map = document.getElementById("map").style.opacity = 1;
-    var dialog = document.getElementById("modification");
-    dialog.style.display = "none";
+    document.getElementById("map").style.opacity = 1;
+    $("#modification").css("display", "none");
 }
 
 function deleteEmployee() {
-    var name = trimWhitespace($("#EmpName").val());
+    var name = $("#EmpName").val().trim();
 
     if (name === "")
         alert("You must select a name to delete");
     else {
         if (confirm("Are you sure you want to delete this employee?")) {
             $.post("/delete?name=" + name)
-                .done(function(data) {
+                .done(function() {
                     closeModification();
                     init();
                 });
         }
     }
-
-    $.post("/setlocation", JSON.stringify({ "name": employeeName, "structure": newLocation, "previousname": $("#EmpName").data("oldvalue") }))
-        .done(function(data) {
-            closeModification();
-            init();
-        });
 }
 
 function commitModification() {
 
-    var employeeName = trimWhitespace($("#EmpName").val());
-    var newLocation = trimWhitespace($("#location").val());
+    var employeeName = $("#EmpName").val().trim();
+    var newLocation = $("#location").val().trim();
     if ((employeeName === "") || (newLocation === "")) {
         alert("You must enter a name (Firstname Lastname) and provide a location (cube number)");
     } else {
@@ -270,42 +236,4 @@ function commitModification() {
                 init();
             });
     }
-}
-
-function refreshMap() {
-    employeesDocument = null;
-    mapDocument = null;
-    drawMap();
-}
-
-function getExpiryDate(noDays) {
-    var UTCstring;
-    Today = new Date();
-    nomilli = Date.parse(Today);
-    Today.setTime(nomilli + noDays * 24 * 60 * 60 * 1000);
-    UTCstring = Today.toUTCString();
-    return UTCstring;
-}
-
-function getCookie(cookieName) {
-    var cookiestring = "" + document.cookie;
-    var index1 = cookiestring.indexOf(cookieName);
-    if (index1 == -1 || cookieName == "") return "";
-    var index2 = cookiestring.indexOf(';', index1);
-    if (index2 == -1) index2 = cookiestring.length;
-    return unescape(cookiestring.substring(index1 + cookieName.length + 1, index2));
-}
-
-function setCookie(name, value, duration) {
-    cookiestring = name + "=" + escape(value) + ";EXPIRES=" + getExpiryDate(duration);
-    document.cookie = cookiestring;
-    if (!getCookie(name)) {
-        return false;
-    } else {
-        return true;
-    }
-}
-
-function trimWhitespace(stringToTrim) {
-    return stringToTrim.replace(/^\s+/g, '').replace(/\s+$/g, '');
 }
