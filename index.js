@@ -3,7 +3,6 @@ var mapDocument = null;
 var quotesDocument = null;
 var quoteTimer = null;
 var foundStructure = null;
-var highLightedColor = "#bfc566";
 var PADDING_BOTTOM = 0;
 var employeeModel;
 var structures;
@@ -58,14 +57,10 @@ function drawMap() {
     mapElement.innerHTML = "";
     var mapWidth = mapModel.width;
     var mapHeight = mapModel.height;
-    drawStructures(mapModel.structures.cubes, mapWidth, mapHeight, "cube");
-    drawStructures(mapModel.structures.meetingrooms, mapWidth, mapHeight, "meetingrooms");
-    drawStructures(mapModel.structures.stairs, mapWidth, mapHeight, "stairs");
-    drawStructures(mapModel.structures.utilities, mapWidth, mapHeight, "utilities");
-    drawStructures(mapModel.structures.offices, mapWidth, mapHeight, "offices");
-    drawStructures(mapModel.structures.voids, mapWidth, mapHeight, "voids");
-    drawStructures(mapModel.structures.facilities, mapWidth, mapHeight, "facilities");
-    drawStructures(mapModel.structures.restrooms, mapWidth, mapHeight, "restrooms");
+
+    for (var property in mapModel.structures) {
+        drawStructures(mapModel.structures[property], mapWidth, mapHeight, property);
+    }
 }
 
 function init() {
@@ -98,7 +93,7 @@ function drawStructures(structures, mapWidth, mapHeight, type) {
         structureWidget.innerHTML = structures[i].name;
         structureWidget.id = structures[i].name;
 
-        if (type == "cube") {
+        if (type == "cubes") {
             var employee = getEmployeeByStructure(structures[i].name);
             structureWidget.onclick = editStructure;
             structureWidget.style.cursor = "hand";
@@ -120,7 +115,7 @@ function drawStructures(structures, mapWidth, mapHeight, type) {
 
 function editStructure(e) {
     var target = (e) ? e.target : window.event.srcElement;
-    if (target.type == "cube") {
+    if (target.type == "cubes") {
         showModifyDialog(target.id);
     }
 }

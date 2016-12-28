@@ -72,7 +72,7 @@ select {
 
 /* structure hover */
 
-div.cube:hover {
+div.cubes:hover {
     animation: highlight .1s forwards;
     background-color: #81BA59;
     box-shadow: 1px 1px 5px #888888;
@@ -89,7 +89,7 @@ div.offices:hover {
 
 /* Cubes */
 
-div.cube {
+div.cubes {
     animation: unhighlight .1s forwards;
     padding-top: 2px;
     padding-left: 2px;
@@ -103,17 +103,11 @@ div.meetingrooms {
     padding-top: 10px;
 }
 
-
-/* Meeting Room Text */
-
 .map .meetingrooms {
     color: #58585A;
 }
 
-
-/* Cube Text */
-
-.map .cube {
+.map .cubes {
     font-size: 7pt;
 }
 
