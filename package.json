@@ -1,0 +1,9 @@
+{
+    "name": "map",
+    "description": "Office Map",
+    "authors": "Ted",
+    "version": "1.0.0",
+    "dependencies": {
+        "jquery": "3.1.1"
+    }
+}
