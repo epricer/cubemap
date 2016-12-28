@@ -1,3 +1,4 @@
 jsconfig.json
 tsd.json
 typings/**
+node_modules/**
