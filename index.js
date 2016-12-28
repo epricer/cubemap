@@ -22,13 +22,15 @@ function trackCursor(mouseEvent) {
     var xPosition = mouseEvent.x / getWindowWidth();
     var yPosition = mouseEvent.y / getWindowHeight();
 
-    var left = (getWindowWidth() - getZoomWidth()) * xPosition;
-    var top = (getWindowHeight() - getZoomHeight()) * yPosition;
+    var zoomWidth = getZoomWidth();
+    var zoomHeight = getZoomHeight();
+    var left = (zoomWidth !== null) ? (getWindowWidth() - zoomWidth) * xPosition : 0;
+    var top = (zoomHeight !== null) ? (getWindowHeight() - zoomHeight) * yPosition : 0;
     $("#map").css("left", left);
     $("#map").css("top", top);
 }
 
-function getScale() {
+function getZoom() {
     return 1.3;
 }
 
@@ -41,11 +43,13 @@ function getWindowHeight() {
 }
 
 function getZoomWidth() {
-    return getWindowWidth() * getScale();
+    if (mapModel.width * getAutoScale(mapModel.width, mapModel.height) * getZoom() < getWindowWidth()) return null;
+    return getWindowWidth() * getZoom();
 }
 
 function getZoomHeight() {
-    return getWindowHeight() * getScale();
+    if (mapModel.height * getAutoScale(mapModel.width, mapModel.height) * getZoom() < getWindowHeight()) return null;
+    return getWindowHeight() * getZoom();
 }
 
 function cacheBust(url) {
@@ -62,9 +66,10 @@ function drawMap() {
         drawStructures(mapModel.structures[property], mapWidth, mapHeight, property);
     }
 }
+margin
 
 function init() {
-    $("#map").css("transform", "scale(" + getScale() + "," + getScale() + ")");
+    $("#map").css("transform", "scale(" + getZoom() + "," + getZoom() + ")");
 
     $.when(
         jQuery.getJSON("/employees.json", function(data) {
@@ -80,16 +85,13 @@ function init() {
 
 
 function drawStructures(structures, mapWidth, mapHeight, type) {
-    var xScale = getXScale(mapWidth, mapHeight);
-    var yScale = getYScale(mapWidth, mapHeight);
+    var scale = getAutoScale(mapWidth, mapHeight);
     for (var i = 0; i < structures.length; i++) {
         var structureWidget = document.createElement("div");
         structureWidget.className = type;
         structureWidget.type = type;
-        structureWidget.style.width = structures[i].width * xScale;
-        structureWidget.style.height = structures[i].height * yScale;
-        structureWidget.setAttribute("originalWidth", structures[i].width * xScale);
-        structureWidget.setAttribute("originalHeight", structures[i].height * xScale);
+        structureWidget.style.width = structures[i].width * scale;
+        structureWidget.style.height = structures[i].height * scale;
         structureWidget.innerHTML = structures[i].name;
         structureWidget.id = structures[i].name;
 
@@ -103,10 +105,8 @@ function drawStructures(structures, mapWidth, mapHeight, type) {
             }
         }
         structureWidget.id = structures[i].name;
-        var x = (mapWidth - structures[i].x - structures[i].width) * xScale;
-        var y = (mapHeight - structures[i].y - structures[i].height) * yScale;
-        structureWidget.style.left = x;
-        structureWidget.style.top = y;
+        structureWidget.style.left = (mapWidth - structures[i].x - structures[i].width) * scale;
+        structureWidget.style.top = (mapHeight - structures[i].y - structures[i].height) * scale;
         getMap().appendChild(structureWidget);
     }
 }
@@ -118,24 +118,11 @@ function editStructure(e) {
     }
 }
 
-function getXScale(mapWidth, mapHeight) {
-    return getCanvasWidth(mapWidth, mapHeight) / mapWidth;
-}
-
-function getYScale(mapWidth, mapHeight) {
-    return getCanvasHeight(mapWidth, mapHeight) / mapHeight;
-}
-
-function getCanvasWidth(mapWidth, mapHeight) {
-    var maxWidth = document.body.clientWidth;
-    var maxHeight = document.body.clientHeight;
-    return Math.min(maxWidth, (mapWidth / mapHeight) * maxHeight);
-}
-
-function getCanvasHeight(mapWidth, mapHeight) {
-    var maxWidth = document.body.clientWidth;
-    var maxHeight = document.body.clientHeight - PADDING_BOTTOM;
-    return Math.min(maxHeight, (mapHeight / mapWidth) * maxWidth);
+function getAutoScale(mapWidth, mapHeight) {
+    // calculate a scaling factor that maximizes the map in the available screen
+    var scaleX = $(window).width() / mapWidth;
+    var scaleY = $(window).height() / mapHeight;
+    return Math.floor(Math.min(scaleX, scaleY));
 }
 
 function selectNodes(node, xpathExpression) {

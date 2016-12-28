@@ -16,7 +16,7 @@ func main() {
 	rootPath = *flag.String("path", ".", "root path for the web content")
 	var serverPort = flag.Int("port", 8080, "port for web server")
 	flag.Parse()
-	fmt.Printf("Cubemap serving from \"%v\" on port %v...\n", rootPath, *serverPort)
+	log.Printf("Cubemap serving from \"%v\" on port %v...\n", rootPath, *serverPort)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(rootPath))))
 	http.HandleFunc("/setlocation", setLocation)
 	http.HandleFunc("/delete", delete)
@@ -29,7 +29,6 @@ func delete(w http.ResponseWriter, req *http.Request) {
 
 	for i, employee := range employeeList {
 		if employee.Name == name {
-			log.Printf("comparing %v to %v", employee.Name, name)
 
 			employeeList = employeeList[:i+copy(employeeList[i:], employeeList[i+1:])]
 			saveEmployeeList(employeeList)
@@ -42,7 +41,7 @@ func getEmployeeList() []employee {
 
 	fileBytes, e := ioutil.ReadFile(rootPath + "/employees.json")
 	if e != nil {
-		fmt.Printf("File error: %v\n", e)
+		log.Printf("File error: %v\n", e)
 		return nil
 	}
 
