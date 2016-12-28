@@ -19,7 +19,57 @@ func main() {
 	fmt.Printf("Cubemap serving from \"%v\" on port %v...\n", rootPath, *serverPort)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(rootPath))))
 	http.HandleFunc("/setlocation", setLocation)
+	http.HandleFunc("/delete", delete)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", *serverPort), nil))
+}
+
+func delete(w http.ResponseWriter, req *http.Request) {
+	name := req.URL.Query().Get("name")
+	employeeList := getEmployeeList()
+
+	for i, employee := range employeeList {
+		if employee.Name == name {
+			log.Printf("comparing %v to %v", employee.Name, name)
+
+			employeeList = employeeList[:i+copy(employeeList[i:], employeeList[i+1:])]
+			saveEmployeeList(employeeList)
+			return
+		}
+	}
+}
+
+func getEmployeeList() []employee {
+
+	fileBytes, e := ioutil.ReadFile(rootPath + "/employees.json")
+	if e != nil {
+		fmt.Printf("File error: %v\n", e)
+		return nil
+	}
+
+	employeeList := make([]employee, 0)
+
+	err := json.Unmarshal(fileBytes, &employeeList)
+
+	if err != nil {
+		log.Printf("Could not decode %v/employees.json for editing. Reason: %v", rootPath, err)
+		return nil
+	}
+	return employeeList
+}
+
+func saveEmployeeList(employeeList []employee) {
+
+	outbytes, err := json.MarshalIndent(employeeList, "", "\t")
+	if err != nil {
+		log.Printf("Could not unmarshal to json. Reason: %v", err)
+		return
+	}
+
+	err = ioutil.WriteFile(rootPath+"/employees.json", outbytes, 0644)
+	if err != nil {
+		log.Printf("Could not write %v/employees.jsonxml. Reason: %v", rootPath, err)
+		return
+	}
 }
 
 func setLocation(w http.ResponseWriter, req *http.Request) {
@@ -37,32 +87,12 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	fileBytes, e := ioutil.ReadFile(rootPath + "/employees.json")
-	if e != nil {
-		fmt.Printf("File error: %v\n", e)
-		return
-	}
+	employeeList := getEmployeeList()
 
-	employeeList := make([]employee, 0)
-
-	if err != nil {
-		log.Printf("Could not open %v/employees.json for editing. Reason: %v", rootPath, err)
-		return
-	}
-
-	err = json.Unmarshal(fileBytes, &employeeList)
-	log.Printf("employee list from file: %+v", employeeList)
-
-	if err != nil {
-		log.Printf("Could not decode %v/employees.json for editing. Reason: %v", rootPath, err)
-		return
-	}
-
-	var found = false
+	var isnew = true
 	for i, employee := range employeeList {
-		log.Printf("Comparing to %+v", employee)
 		if employee.Name == newEmpInfo.PreviousName {
-			found = true
+			isnew = false
 			employee.Structure = newEmpInfo.Structure
 			employee.Name = newEmpInfo.Name
 			employeeList[i] = employee
@@ -70,24 +100,12 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	if !found {
+	if isnew {
 		// add'
-		log.Printf("Adding %+v", newEmpInfo)
 		employeeList = append(employeeList, employee{Name: newEmpInfo.Name, Structure: newEmpInfo.Structure})
 	}
 
-	outbytes, err := json.MarshalIndent(employeeList, "", "\t")
-	log.Printf("employee list: %+v", employeeList)
-	if err != nil {
-		log.Printf("Could not unmarshal to json. Reason: %v", err)
-		return
-	}
-
-	err = ioutil.WriteFile(rootPath+"/employees.json", outbytes, 0644)
-	if err != nil {
-		log.Printf("Could not write %v/employees.jsonxml. Reason: %v", rootPath, err)
-		return
-	}
+	saveEmployeeList(employeeList)
 }
 
 type employee struct {
