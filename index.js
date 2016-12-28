@@ -103,10 +103,8 @@ function drawStructures(structures, mapWidth, mapHeight, type) {
             }
         }
         structureWidget.id = structures[i].name;
-        var x;
-        var y;
-        x = structures[i].x * xScale;
-        y = structures[i].y * yScale;
+        var x = (mapWidth - structures[i].x - structures[i].width) * xScale;
+        var y = (mapHeight - structures[i].y - structures[i].height) * yScale;
         structureWidget.style.left = x;
         structureWidget.style.top = y;
         getMap().appendChild(structureWidget);
