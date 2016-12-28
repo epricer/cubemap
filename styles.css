@@ -260,13 +260,6 @@ div.modification {
     font-size: smaller;
 }
 
-a.rotate {
-    right: 0px;
-    position: absolute;
-    top: 0px;
-    border: none;
-}
-
 a IMG {
     border: 0px;
 }

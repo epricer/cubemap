@@ -3,14 +3,11 @@ var mapDocument = null;
 var quotesDocument = null;
 var quoteTimer = null;
 var foundStructure = null;
-var flipCookie = getCookie("flip");
 var highLightedColor = "#bfc566";
 var PADDING_BOTTOM = 0;
 var employeeModel;
 var structures;
 var mapModel;
-
-flip = ((flipCookie === "") || (flipCookie === null) || (flipCookie == "true")) ? true : false;
 
 
 function Structure(description, type, x, y, width, height) {
@@ -22,7 +19,6 @@ function Structure(description, type, x, y, width, height) {
     this.height = height;
 }
 
-
 function trackCursor(mouseEvent) {
     var xPosition = mouseEvent.x / getWindowWidth();
     var yPosition = mouseEvent.y / getWindowHeight();
@@ -31,8 +27,6 @@ function trackCursor(mouseEvent) {
     var top = (getWindowHeight() - getZoomHeight()) * yPosition;
     $("#map").css("left", left);
     $("#map").css("top", top);
-    /*$("#map").css("transition", ".5s");
-    $("#map").css("transition-delay", ".02s");*/
 }
 
 function getScale() {
@@ -55,25 +49,23 @@ function getZoomHeight() {
     return getWindowHeight() * getScale();
 }
 
-
 function cacheBust(url) {
     return url + "?d=" + new Date().getTime();
 }
-
 
 function drawMap() {
     var mapElement = getMap();
     mapElement.innerHTML = "";
     var mapWidth = mapModel.width;
     var mapHeight = mapModel.height;
-    drawStructures(mapModel.structures.cubes, mapWidth, mapHeight, flip, "cube");
-    drawStructures(mapModel.structures.meetingrooms, mapWidth, mapHeight, flip, "meetingrooms");
-    drawStructures(mapModel.structures.stairs, mapWidth, mapHeight, flip, "stairs");
-    drawStructures(mapModel.structures.utilities, mapWidth, mapHeight, flip, "utilities");
-    drawStructures(mapModel.structures.offices, mapWidth, mapHeight, flip, "offices");
-    drawStructures(mapModel.structures.voids, mapWidth, mapHeight, flip, "voids");
-    drawStructures(mapModel.structures.facilities, mapWidth, mapHeight, flip, "facilities");
-    drawStructures(mapModel.structures.restrooms, mapWidth, mapHeight, flip, "restrooms");
+    drawStructures(mapModel.structures.cubes, mapWidth, mapHeight, "cube");
+    drawStructures(mapModel.structures.meetingrooms, mapWidth, mapHeight, "meetingrooms");
+    drawStructures(mapModel.structures.stairs, mapWidth, mapHeight, "stairs");
+    drawStructures(mapModel.structures.utilities, mapWidth, mapHeight, "utilities");
+    drawStructures(mapModel.structures.offices, mapWidth, mapHeight, "offices");
+    drawStructures(mapModel.structures.voids, mapWidth, mapHeight, "voids");
+    drawStructures(mapModel.structures.facilities, mapWidth, mapHeight, "facilities");
+    drawStructures(mapModel.structures.restrooms, mapWidth, mapHeight, "restrooms");
 }
 
 function init() {
@@ -92,7 +84,7 @@ function init() {
 }
 
 
-function drawStructures(structures, mapWidth, mapHeight, flip, type) {
+function drawStructures(structures, mapWidth, mapHeight, type) {
     var xScale = getXScale(mapWidth, mapHeight);
     var yScale = getYScale(mapWidth, mapHeight);
     for (var i = 0; i < structures.length; i++) {
@@ -118,13 +110,8 @@ function drawStructures(structures, mapWidth, mapHeight, flip, type) {
         structureWidget.id = structures[i].name;
         var x;
         var y;
-        if (flip) {
-            x = (mapWidth - structures[i].x - structures[i].width) * xScale;
-            y = (mapHeight - structures[i].y - structures[i].height) * yScale;
-        } else {
-            x = structures[i].x * xScale;
-            y = structures[i].y * yScale;
-        }
+        x = structures[i].x * xScale;
+        y = structures[i].y * yScale;
         structureWidget.style.left = x;
         structureWidget.style.top = y;
         getMap().appendChild(structureWidget);
@@ -337,12 +324,6 @@ function setCookie(name, value, duration) {
     } else {
         return true;
     }
-}
-
-function flipMap() {
-    flip = !flip;
-    setCookie("flip", flip, 10000);
-    drawMap();
 }
 
 function trimWhitespace(stringToTrim) {
