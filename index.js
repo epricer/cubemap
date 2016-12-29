@@ -133,8 +133,7 @@ function hideQuote() {
 function showModifyDialog(structure) {
     var employee = getEmployeeByStructure(structure.name);
     var employeeName = (employee === null) ? "" : employee.name;
-    $("#overlay").css("display", "block");
-    $("#map").css("filter", "blur(1px)");
+    $("#map").css("filter", "blur(3px)");
 
     $("#location").val(structure.name);
     $("#name").val(employeeName);
@@ -144,7 +143,6 @@ function showModifyDialog(structure) {
 
 function closeModification() {
     $("#map").css("filter", "");
-    $("#overlay").css("display", "none");
     $("#modification").css("display", "none");
 }
 
@@ -169,7 +167,7 @@ function commitModification() {
     if ((employeeName === "") || (newLocation === "")) {
         alert("You must enter a name (Firstname Lastname) and provide a location (cube number)");
     } else {
-        $.post("/setlocation", JSON.stringify({ "name": employeeName, "structure": newLocation, "previousname": $("#EmpName").data("oldvalue") }))
+        $.post("/setlocation", JSON.stringify({ "name": employeeName, "structure": newLocation, "previousname": $("#name").data("oldvalue") }))
             .done(function(data) {
                 closeModification();
                 init();

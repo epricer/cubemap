@@ -105,12 +105,14 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 		for _, s := range sg.Structures {
 			if s.Name == newEmpInfo.Structure {
 				structureOkay = (s.Editable == true)
+				log.Printf("structure %v exists", newEmpInfo.Structure)
 				break
 			}
 		}
 	}
 
 	if !structureOkay {
+		log.Printf("structure %v does not exist or is not editable", newEmpInfo.Structure)
 		http.Error(w, "That structure doesn't exist or is uneditable", http.StatusUnauthorized)
 		return
 	}
@@ -119,6 +121,7 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 	if newEmpInfo.PreviousName != newEmpInfo.Name {
 		for _, employee := range employeeList {
 			if employee.Name == newEmpInfo.Name {
+				log.Printf("Name %v already exists ", newEmpInfo.Name)
 				http.Error(w, "Can't change to an existing name", http.StatusConflict)
 				return
 			}
@@ -128,6 +131,8 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 	var isnew = true
 	for i, employee := range employeeList {
 		if employee.Name == newEmpInfo.PreviousName {
+			log.Printf("Updating existing %v as %v", employee.Name, newEmpInfo.Name)
+
 			isnew = false
 			employee.Structure = newEmpInfo.Structure
 			employee.Name = newEmpInfo.Name
@@ -139,6 +144,7 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 
 	if isnew {
 		// add'
+		log.Printf("Adding new person %v", newEmpInfo.Name)
 		var emp = employee{Name: newEmpInfo.Name, Structure: newEmpInfo.Structure}
 		employeeList = append(employeeList, emp)
 		w.WriteHeader(http.StatusCreated)
