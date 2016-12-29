@@ -1,11 +1,6 @@
-var employeesDocument = null;
-var mapDocument = null;
 var quotesDocument = null;
 var quoteTimer = null;
-var foundStructure = null;
-var PADDING_BOTTOM = 0;
 var employeeModel;
-var structures;
 var mapModel;
 
 function trackCursor(mouseEvent) {
@@ -42,24 +37,17 @@ function getZoomHeight() {
     return getWindowHeight() * getZoom();
 }
 
-function cacheBust(url) {
-    return url + "?d=" + new Date().getTime();
-}
-
 function drawMap() {
-    var mapElement = getMap();
-    mapElement.innerHTML = "";
-    var mapWidth = mapModel.width;
-    var mapHeight = mapModel.height;
+    $("#map").css("transform", "scale(" + getZoom() + "," + getZoom() + ")");
+    $("#map").empty();
 
     for (var property in mapModel.structures) {
-        drawStructures(mapModel.structures[property], mapWidth, mapHeight, property);
+        drawStructures(mapModel.structures[property], mapModel.width, mapModel.height, property);
     }
 }
 
 
 function init() {
-    $("#map").css("transform", "scale(" + getZoom() + "," + getZoom() + ")");
 
     $.when(
         $.ajax({ url: "/employees.json", cache: false }).done(function(data) {
@@ -103,13 +91,6 @@ function drawStructures(structures, mapWidth, mapHeight, type) {
     }
 }
 
-function editStructure(e) {
-    var target = (e) ? e.target : window.event.srcElement;
-    if ($(target).data("structure").type == "cubes") {
-        showModifyDialog(target.id);
-    }
-}
-
 function getAutoScale(mapWidth, mapHeight) {
     // calculate a scaling factor that maximizes the map in the available screen
     var scaleX = $(window).width() / mapWidth;
@@ -134,15 +115,10 @@ function loadXMLDoc(url) {
     var req;
     req = new XMLHttpRequest();
     if (req) {
-        req.open("GET", cacheBust(url), false);
+        req.open("GET", url, false);
         req.send(null);
         return req.responseXML;
     }
-}
-
-
-function getMap() {
-    return document.getElementById("map");
 }
 
 
@@ -171,16 +147,16 @@ function getEmployeeByStructure(structureName) {
 
 function showQuote() {
     hideQuote();
-    document.getElementById("bubble").style.display = "block";
-    document.getElementById("quote").style.display = "block";
-    document.getElementById("quote").innerHTML = getQuote();
+    $("#bubble").css("display", "block");
+    $("#quote").css("display", "block");
+    $("#quote").html(getQuote());
     quoteTimer = window.setTimeout(hideQuote, 3000);
 }
 
 function hideQuote() {
     window.clearTimeout(quoteTimer);
-    document.getElementById("bubble").style.display = "none";
-    document.getElementById("quote").style.display = "none";
+    $("#bubble").css("display", "none");
+    $("#quote").css("display", "none");
 }
 
 function showModifyDialog(structure) {
@@ -195,7 +171,7 @@ function showModifyDialog(structure) {
 }
 
 function closeModification() {
-    document.getElementById("map").style.opacity = 1;
+    $("#map").css("opacity", 1);
     $("#modification").css("display", "none");
 }
 

@@ -87,6 +87,8 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	//TODO: Make sure the structure exists and is editable!
+
 	employeeList := getEmployeeList()
 
 	// make sure the user didn't try to change to a name that is already taken
