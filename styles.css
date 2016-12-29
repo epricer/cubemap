@@ -1,240 +1,228 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #FAFAFA;
-    color: #58585A;
-    border: 0px;
-    margin: 0px;
-    overflow: hidden;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-foo {
-    color: #93AACF;
-    color: #CBE2BA;
-    color: #81BA59;
-    color: #6788BE;
-    color: #FFFFFF;
-    color: #AAAAAA;
-}
-
-div.map {
-    position: fixed;
-}
-
-
-/* Dropdown Selection Box */
-
-select {
-    color: #58585A;
-    background-color: #ffffff;
-    font-weight: bolder;
-}
-
-
-/* all structures */
-
-.map div {
-    position: absolute;
-    font-size: 8pt;
-    border: 1px solid #FAFAFA;
-    background-color: #CBE2BA;
-    box-sizing: border-box;
-    padding-top: 5px;
-    padding-left: 5px;
-    overflow: hidden;
-    z-index: 1;
-}
-
-
-/* structure hover */
-
-div.cubes:hover {
-    background-color: #81BA59;
-    box-shadow: 1px 1px 5px #888888;
-    z-index: 99;
-    transform: scale(1.5, 1.5);
-    font-size: 5.33pt;
-    padding-top: 6.66px;
-    padding-left: 0px;
-    text-align: center;
-    border-radius: 5px;
-}
-
-div.offices:hover {
-    background-color: #81BA59;
-    box-shadow: 1px 1px 5px #888888;
-    z-index: 99;
-    transform: scale(1.5, 1.5);
-    font-size: 5.33pt;
-    padding-top: 6.66px;
-    padding-left: 0px;
-    text-align: center;
-    border-radius: 5px;
-}
-
-
-/* Cubes */
-
-div.cubes {
-    margin: auto;
-    text-align: left;
-}
-
-div.meetingrooms {
-    background-color: #93AACF;
-    text-align: center;
-}
-
-.map .meetingrooms {
-    color: #58585A;
-}
-
-.map .cubes {
-    font-size: 7pt;
-}
-
-div.office {
-    background-color: #CBE2BA;
-    text-align: center;
-    vertical-align: middle;
-}
-
-div.space {
-    background-color: #afafaf;
-    text-align: center;
-}
-
-div.stair {
-    background-color: #58585A;
-    text-align: center;
-}
-
-div.reception {
-    background-color: #bfc566;
-    text-align: center;
-    margin: auto;
-}
-
-.map .reception {
-    color: #99A744;
-}
-
-div.cafe {
-    padding-right: 10px;
-    background-color: #bfc566;
-    text-align: right;
-    border: 0px;
-}
-
-
-/* Cafe Text */
-
-.map .cafe {
-    color: #58585A;
-}
-
-.map .stair {
-    color: #93AACF;
-}
-
-
-/* Utility */
-
-div.utilities {
-    background-color: #93AACF;
-    text-align: center;
-}
-
-div.facilities {
-    border: solid 1px #e3e3e3;
-    text-align: center;
-    background-color: #93AACF;
-}
-
-div.restrooms {
-    border: solid 1px #e3e3e3;
-    background-color: #CEF6F5;
-    text-align: center;
-}
-
-img.missingPerson {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-}
-
-div.quote {
-    left: 140px;
-    bottom: 170px;
-    width: 180px;
-    height: 65px;
-    color: #000000;
-    position: absolute;
-    z-index: 99;
-    text-align: center;
-}
-
-img.bubble {
-    position: absolute;
-    bottom: 90px;
-    left: 95px;
-    display: block;
-    z-index: 98;
-    filter: progid: DXImageTransform.Microsoft.Alpha(opacity=0);
-}
-
-span.bubble {
-    position: absolute;
-    bottom: 90px;
-    left: 100px;
-    width: 500px;
-    height: 500px;
-    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src="Bubble.png");
-}
-
-div.button {
-    border: solid 1px #58585A;
-    float: right;
-    clear: none;
-    margin-right: 4px;
-    margin-left: 4px;
-    padding-left: 2px;
-    padding-right: 2px;
-    cursor: default;
-}
-
-div.button:hover {
-    background-color: #ffffff;
-}
-
-input {
-    width: 100%;
-}
-
-div.modification {
-    height: 77px;
-    width: 300px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    background: #81BA59;
-    box-shadow: 5px 5px 5px #888888;
-}
-
-#modification td {
-    font-size: smaller;
-}
-
-a IMG {
-    border: 0px;
-}
-
-a IMG {
-    border: 0px;
-}
+ @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+ body {
+     font-family: 'Open Sans', sans-serif;
+     background-color: #FAFAFA;
+     color: #58585A;
+     border: 0px;
+     margin: 0px;
+     overflow: hidden;
+     position: absolute;
+     width: 100%;
+     height: 100%;
+ }
+ 
+ foo {
+     color: #93AACF;
+     color: #CBE2BA;
+     color: #81BA59;
+     color: #6788BE;
+     color: #FFFFFF;
+     color: #AAAAAA;
+ }
+ 
+ div.map {
+     position: fixed;
+ }
+ /* Dropdown Selection Box */
+ 
+ select {
+     color: #58585A;
+     background-color: #ffffff;
+     font-weight: bolder;
+ }
+ /* all structures */
+ 
+ .map div {
+     position: absolute;
+     font-size: 8pt;
+     border: 1px solid #FAFAFA;
+     background-color: #CBE2BA;
+     box-sizing: border-box;
+     padding-top: 5px;
+     padding-left: 5px;
+     overflow: hidden;
+     z-index: 1;
+ }
+ /* structure hover */
+ 
+ div.cubes:hover {
+     background-color: #81BA59;
+     box-shadow: 1px 1px 5px #888888;
+     z-index: 99;
+     transform: scale(1.5, 1.5);
+     font-size: 5.33pt;
+     padding-top: 6.66px;
+     padding-left: 0px;
+     text-align: center;
+     border-radius: 5px;
+ }
+ 
+ div.offices:hover {
+     background-color: #81BA59;
+     box-shadow: 1px 1px 5px #888888;
+     z-index: 99;
+     transform: scale(1.5, 1.5);
+     font-size: 5.33pt;
+     padding-top: 6.66px;
+     padding-left: 0px;
+     text-align: center;
+     border-radius: 5px;
+ }
+ /* Cubes */
+ 
+ div.cubes {
+     margin: auto;
+     text-align: left;
+ }
+ 
+ div.meetingrooms {
+     background-color: #93AACF;
+     text-align: center;
+ }
+ 
+ .map .meetingrooms {
+     color: #58585A;
+ }
+ 
+ .map .cubes {
+     font-size: 7pt;
+ }
+ 
+ div.office {
+     background-color: #CBE2BA;
+     text-align: center;
+     vertical-align: middle;
+ }
+ 
+ div.space {
+     background-color: #afafaf;
+     text-align: center;
+ }
+ 
+ div.stair {
+     background-color: #58585A;
+     text-align: center;
+ }
+ 
+ div.reception {
+     background-color: #bfc566;
+     text-align: center;
+     margin: auto;
+ }
+ 
+ .map .reception {
+     color: #99A744;
+ }
+ 
+ div.cafe {
+     padding-right: 10px;
+     background-color: #bfc566;
+     text-align: right;
+     border: 0px;
+ }
+ /* Cafe Text */
+ 
+ .map .cafe {
+     color: #58585A;
+ }
+ 
+ .map .stair {
+     color: #93AACF;
+ }
+ /* Utility */
+ 
+ div.utilities {
+     background-color: #93AACF;
+     text-align: center;
+ }
+ 
+ div.facilities {
+     border: solid 1px #e3e3e3;
+     text-align: center;
+     background-color: #93AACF;
+ }
+ 
+ div.restrooms {
+     border: solid 1px #e3e3e3;
+     background-color: #CEF6F5;
+     text-align: center;
+ }
+ 
+ img.missingPerson {
+     position: absolute;
+     bottom: 0px;
+     left: 0px;
+ }
+ 
+ div.quote {
+     left: 140px;
+     bottom: 170px;
+     width: 180px;
+     height: 65px;
+     color: #000000;
+     position: absolute;
+     z-index: 99;
+     text-align: center;
+ }
+ 
+ img.bubble {
+     position: absolute;
+     bottom: 90px;
+     left: 95px;
+     display: block;
+     z-index: 98;
+     filter: progid: DXImageTransform.Microsoft.Alpha(opacity=0);
+ }
+ 
+ span.bubble {
+     position: absolute;
+     bottom: 90px;
+     left: 100px;
+     width: 500px;
+     height: 500px;
+     filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src="Bubble.png");
+ }
+ 
+ div.button {
+     border: solid 1px #58585A;
+     float: right;
+     clear: none;
+     margin-right: 4px;
+     margin-left: 4px;
+     padding-left: 2px;
+     padding-right: 2px;
+     cursor: default;
+ }
+ 
+ div.button:hover {
+     background-color: #ffffff;
+ }
+ 
+ input {
+     width: 100%;
+ }
+ 
+ div.modification {
+     height: 77px;
+     width: 300px;
+     position: absolute;
+     top: 0;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     margin: auto;
+     background: #81BA59;
+     box-shadow: 5px 5px 5px #888888;
+ }
+ 
+ #modification td {
+     font-size: smaller;
+ }
+ 
+ a IMG {
+     border: 0px;
+ }
+ 
+ a IMG {
+     border: 0px;
+ }
