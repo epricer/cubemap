@@ -6,7 +6,7 @@
 
 ### How do I get set up? ###
 
-* fill out the map.xml file (it will auto-scale to fit, so the units are arbitrary)
+* fill out the map.json file (it will auto-scale to fit, so the units are arbitrary)
 * install go
 * `$go run cubemap.go -port [desired port]`
 
