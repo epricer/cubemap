@@ -32,6 +32,7 @@ func delete(w http.ResponseWriter, req *http.Request) {
 
 			employeeList = employeeList[:i+copy(employeeList[i:], employeeList[i+1:])]
 			saveEmployeeList(employeeList)
+			w.WriteHeader(http.StatusNoContent)
 			return
 		}
 	}
@@ -88,6 +89,16 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 
 	employeeList := getEmployeeList()
 
+	// make sure the user didn't try to change to a name that is already taken
+	if newEmpInfo.PreviousName != newEmpInfo.Name {
+		for _, employee := range employeeList {
+			if employee.Name == newEmpInfo.Name {
+				http.Error(w, "Can't change to an existing name", http.StatusConflict)
+				return
+			}
+		}
+	}
+
 	var isnew = true
 	for i, employee := range employeeList {
 		if employee.Name == newEmpInfo.PreviousName {
@@ -95,13 +106,17 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 			employee.Structure = newEmpInfo.Structure
 			employee.Name = newEmpInfo.Name
 			employeeList[i] = employee
+			w.WriteHeader(http.StatusNoContent)
 			break
 		}
 	}
 
 	if isnew {
 		// add'
-		employeeList = append(employeeList, employee{Name: newEmpInfo.Name, Structure: newEmpInfo.Structure})
+		var emp = employee{Name: newEmpInfo.Name, Structure: newEmpInfo.Structure}
+		employeeList = append(employeeList, emp)
+		w.WriteHeader(http.StatusCreated)
+		fmt.Fprintf(w, "%+v", emp)
 	}
 
 	saveEmployeeList(employeeList)

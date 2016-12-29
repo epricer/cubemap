@@ -8,19 +8,9 @@ var employeeModel;
 var structures;
 var mapModel;
 
-
-function Structure(description, type, x, y, width, height) {
-    this.description = description;
-    this.type = type;
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-}
-
 function trackCursor(mouseEvent) {
-    var xPosition = mouseEvent.x / getWindowWidth();
-    var yPosition = mouseEvent.y / getWindowHeight();
+    var xPosition = mouseEvent.clientX / getWindowWidth();
+    var yPosition = mouseEvent.clientY / getWindowHeight();
 
     var zoomWidth = getZoomWidth();
     var zoomHeight = getZoomHeight();
@@ -72,10 +62,10 @@ function init() {
     $("#map").css("transform", "scale(" + getZoom() + "," + getZoom() + ")");
 
     $.when(
-        jQuery.getJSON("/employees.json", function(data) {
+        $.ajax({ url: "/employees.json", cache: false }).done(function(data) {
             employeeModel = data;
         }),
-        jQuery.getJSON("/map.json", function(data) {
+        $.ajax({ url: "/map.json", cache: false }).done(function(data) {
             mapModel = data;
         })
     ).then(function() {
@@ -87,33 +77,35 @@ function init() {
 function drawStructures(structures, mapWidth, mapHeight, type) {
     var scale = getAutoScale(mapWidth, mapHeight);
     for (var i = 0; i < structures.length; i++) {
-        var structureWidget = document.createElement("div");
-        structureWidget.className = type;
-        structureWidget.type = type;
-        structureWidget.style.width = structures[i].width * scale;
-        structureWidget.style.height = structures[i].height * scale;
-        structureWidget.innerHTML = structures[i].name;
-        structureWidget.id = structures[i].name;
+        var structure = structures[i];
+        var structureDiv = $("<div></div>");
+        structureDiv.addClass(type);
+        structureDiv.css("width", structure.width * scale);
+        structureDiv.css("height", structure.height * scale);
+        structureDiv.css("left", (mapWidth - structure.x - structure.width) * scale);
+        structureDiv.css("top", (mapHeight - structure.y - structure.height) * scale);
+        structureDiv.attr("id", structure.name); // todo: is this needed?
+        structureDiv.data("structure", structure);
 
-        if (type == "cubes") {
-            var employee = getEmployeeByStructure(structures[i].name);
-            structureWidget.onclick = editStructure;
-            structureWidget.style.cursor = "hand";
-            if (employee !== null) {
-                var nameComponents = employee.name.split(" ");
-                structureWidget.innerHTML = nameComponents.join("<br />");
-            }
+        var employee = getEmployeeByStructure(structure.name);
+        if (employee !== null) {
+            structureDiv.html(employee.name.split(" ").join("<br />"));
+        } else {
+            structureDiv.html(structure.name);
         }
-        structureWidget.id = structures[i].name;
-        structureWidget.style.left = (mapWidth - structures[i].x - structures[i].width) * scale;
-        structureWidget.style.top = (mapHeight - structures[i].y - structures[i].height) * scale;
-        getMap().appendChild(structureWidget);
+
+        if (structure.editable) {
+            structureDiv.click(showModifyDialog.bind(this, structure));
+            structureDiv.css('cursor', 'pointer');
+        }
+
+        $("#map").append(structureDiv);
     }
 }
 
 function editStructure(e) {
     var target = (e) ? e.target : window.event.srcElement;
-    if (target.type == "cubes") {
+    if ($(target).data("structure").type == "cubes") {
         showModifyDialog(target.id);
     }
 }
@@ -191,12 +183,12 @@ function hideQuote() {
     document.getElementById("quote").style.display = "none";
 }
 
-function showModifyDialog(structureName) {
-    var employee = getEmployeeByStructure(structureName);
+function showModifyDialog(structure) {
+    var employee = getEmployeeByStructure(structure.name);
     var employeeName = (employee === null) ? "" : employee.name;
 
     $("#map").css("opacity", 0.2);
-    $("#location").val(structureName);
+    $("#location").val(structure.name);
     $("#EmpName").val(employeeName);
     $("#EmpName").data("oldvalue", employeeName);
     $("#modification").css("display", "block");
