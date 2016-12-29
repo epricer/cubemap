@@ -112,6 +112,7 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 
 	if !structureOkay {
 		http.Error(w, "That structure doesn't exist or is uneditable", http.StatusUnauthorized)
+		return
 	}
 
 	// make sure the user didn't try to change to a name that is already taken
