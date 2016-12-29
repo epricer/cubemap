@@ -11,6 +11,17 @@
      height: 100%;
  }
  
+ div.overlay {
+     width: 100%;
+     height: 100%;
+     background-color: #666;
+     opacity: .5;
+     z-index: 2;
+     /* filter: blur(1px); */
+     position: absolute;
+     display: none;
+ }
+ 
  foo {
      color: #93AACF;
      color: #CBE2BA;
@@ -163,7 +174,6 @@
      left: 95px;
      display: block;
      z-index: 98;
-     filter: progid: DXImageTransform.Microsoft.Alpha(opacity=0);
  }
  
  span.bubble {
@@ -172,30 +182,61 @@
      left: 100px;
      width: 500px;
      height: 500px;
-     filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src="Bubble.png");
  }
  
  div.button {
-     border: solid 1px #58585A;
-     float: right;
-     clear: none;
-     margin-right: 4px;
-     margin-left: 4px;
-     padding-left: 2px;
-     padding-right: 2px;
-     cursor: default;
+     float: left;
+     text-align: center;
+     font-size: 12px;
+     color: white;
+     background-color: #6788BE;
+     padding: 8px 18px;
+     margin: 18px 0 0 20px;
+     cursor: pointer;
  }
  
- div.button:hover {
-     background-color: #ffffff;
+ div.button.save {
+     background-color: #81BA59;
+ }
+ 
+ div.button.delete {
+     background-color: #FF7E7E;
+ }
+ 
+ div.button.cancel {
+     background-color: #5D5D5D;
+ }
+ 
+ div.button.save:hover {
+     background-color: #6A9949;
+     transition: background 0.3s ease;
+ }
+ 
+ div.button.delete:hover {
+     background-color: #F65A5A;
+     transition: background 0.3s ease;
+ }
+ 
+ div.button.cancel:hover {
+     background-color: #464646;
+     transition: background 0.3s ease;
  }
  
  input {
      width: 100%;
+     display: inline-block;
+     border: 1px solid #ccc;
+     box-shadow: inset 0 1px 3px #ddd;
+     border-radius: 4px;
+     box-sizing: border-box;
+     padding-left: 20px;
+     padding-right: 20px;
+     padding-top: 12px;
+     padding-bottom: 12px;
  }
  
  div.modification {
-     height: 77px;
+     height: 150px;
      width: 300px;
      position: absolute;
      top: 0;
@@ -203,12 +244,9 @@
      left: 0;
      right: 0;
      margin: auto;
-     background: #81BA59;
+     padding: 20px;
+     background-color: #6788BE;
      box-shadow: 5px 5px 5px #888888;
- }
- 
- #modification td {
-     font-size: smaller;
  }
  
  a IMG {

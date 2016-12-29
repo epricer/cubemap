@@ -133,38 +133,38 @@ function hideQuote() {
 function showModifyDialog(structure) {
     var employee = getEmployeeByStructure(structure.name);
     var employeeName = (employee === null) ? "" : employee.name;
+    $("#overlay").css("display", "block");
+    $("#map").css("filter", "blur(1px)");
 
-    $("#map").css("opacity", 0.2);
     $("#location").val(structure.name);
-    $("#EmpName").val(employeeName);
-    $("#EmpName").data("oldvalue", employeeName);
+    $("#name").val(employeeName);
+    $("#name").data("oldvalue", employeeName);
     $("#modification").css("display", "block");
 }
 
 function closeModification() {
-    $("#map").css("opacity", 1);
+    $("#map").css("filter", "");
+    $("#overlay").css("display", "none");
     $("#modification").css("display", "none");
 }
 
 function deleteEmployee() {
-    var name = $("#EmpName").val().trim();
+    var name = $("#name").val().trim();
 
     if (name === "")
         alert("You must select a name to delete");
     else {
-        if (confirm("Are you sure you want to delete this employee?")) {
-            $.post("/delete?name=" + name)
-                .done(function() {
-                    closeModification();
-                    init();
-                });
-        }
+        $.post("/delete?name=" + name)
+            .done(function() {
+                closeModification();
+                init();
+            });
     }
 }
 
 function commitModification() {
 
-    var employeeName = $("#EmpName").val().trim();
+    var employeeName = $("#name").val().trim();
     var newLocation = $("#location").val().trim();
     if ((employeeName === "") || (newLocation === "")) {
         alert("You must enter a name (Firstname Lastname) and provide a location (cube number)");
