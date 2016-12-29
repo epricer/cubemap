@@ -1,258 +1,256 @@
- @import url('https://fonts.googleapis.com/css?family=Open+Sans');
- body {
-     font-family: 'Open Sans', sans-serif;
-     background-color: #FAFAFA;
-     color: #58585A;
-     border: 0px;
-     margin: 0px;
-     overflow: hidden;
-     position: absolute;
-     width: 100%;
-     height: 100%;
- }
- 
- div.overlay {
-     width: 100%;
-     height: 100%;
-     background-color: #666;
-     opacity: .5;
-     z-index: 2;
-     /* filter: blur(1px); */
-     position: absolute;
-     display: none;
- }
- 
- foo {
-     color: #93AACF;
-     color: #CBE2BA;
-     color: #81BA59;
-     color: #6788BE;
-     color: #FFFFFF;
-     color: #AAAAAA;
- }
- 
- div.map {
-     position: fixed;
- }
- /* Dropdown Selection Box */
- 
- select {
-     color: #58585A;
-     background-color: #ffffff;
-     font-weight: bolder;
- }
- /* all structures */
- 
- .map div {
-     position: absolute;
-     font-size: 7pt;
-     border: 1px solid #FAFAFA;
-     background-color: #CBE2BA;
-     box-sizing: border-box;
-     padding-top: 3px;
-     padding-left: 3px;
-     overflow: hidden;
-     z-index: 1;
- }
- 
- div.cube {
-     margin: auto;
-     text-align: left;
- }
- 
- div.cube:hover {
-     background-color: #81BA59;
-     box-shadow: 1px 1px 5px #888888;
-     z-index: 99;
-     transform: scale(2, 2);
-     font-size: 5.33pt;
-     padding-top: 1.5px;
-     padding-left: 0px;
-     text-align: center;
-     border-radius: 5px;
- }
- 
- div.office:hover {
-     background-color: #81BA59;
-     box-shadow: 1px 1px 5px #888888;
-     z-index: 99;
-     transform: scale(1.5, 1.5);
-     font-size: 5.33pt;
-     padding-top: 6.66px;
-     padding-left: 0px;
-     text-align: center;
-     border-radius: 5px;
- }
- /* Cubes */
- 
- div.meetingroom {
-     background-color: #93AACF;
-     color: #58585A;
-     text-align: center;
- }
- 
- div.office {
-     background-color: #CBE2BA;
-     text-align: center;
-     vertical-align: middle;
- }
- 
- div.space {
-     background-color: #afafaf;
-     text-align: center;
- }
- 
- div.stair {
-     background-color: #58585A;
-     text-align: center;
- }
- 
- div.reception {
-     background-color: #bfc566;
-     text-align: center;
-     margin: auto;
- }
- 
- .map .reception {
-     color: #99A744;
- }
- 
- div.cafe {
-     padding-right: 10px;
-     background-color: #bfc566;
-     text-align: right;
-     border: 0px;
- }
- /* Cafe Text */
- 
- .map .cafe {
-     color: #58585A;
- }
- 
- .map .stair {
-     color: #93AACF;
- }
- /* Utility */
- 
- div.utility {
-     background-color: #93AACF;
-     text-align: center;
- }
- 
- div.facility {
-     border: solid 1px #e3e3e3;
-     text-align: center;
-     background-color: #93AACF;
- }
- 
- div.restroom {
-     border: solid 1px #e3e3e3;
-     background-color: #CEF6F5;
-     text-align: center;
- }
- 
- img.missingPerson {
-     position: absolute;
-     bottom: 0px;
-     left: 0px;
- }
- 
- div.quote {
-     left: 140px;
-     bottom: 170px;
-     width: 180px;
-     height: 65px;
-     color: #000000;
-     position: absolute;
-     z-index: 99;
-     text-align: center;
- }
- 
- img.bubble {
-     position: absolute;
-     bottom: 90px;
-     left: 95px;
-     display: block;
-     z-index: 98;
- }
- 
- span.bubble {
-     position: absolute;
-     bottom: 90px;
-     left: 100px;
-     width: 500px;
-     height: 500px;
- }
- 
- div.button {
-     float: left;
-     text-align: center;
-     font-size: 12px;
-     color: white;
-     background-color: #6788BE;
-     padding: 8px 18px;
-     margin: 18px 0 0 20px;
-     cursor: pointer;
- }
- 
- div.button.save {
-     background-color: #81BA59;
- }
- 
- div.button.delete {
-     background-color: #FF7E7E;
- }
- 
- div.button.cancel {
-     background-color: #5D5D5D;
- }
- 
- div.button.save:hover {
-     background-color: #6A9949;
-     transition: background 0.3s ease;
- }
- 
- div.button.delete:hover {
-     background-color: #F65A5A;
-     transition: background 0.3s ease;
- }
- 
- div.button.cancel:hover {
-     background-color: #464646;
-     transition: background 0.3s ease;
- }
- 
- input {
-     width: 100%;
-     display: inline-block;
-     border: 1px solid #ccc;
-     box-shadow: inset 0 1px 3px #ddd;
-     border-radius: 4px;
-     box-sizing: border-box;
-     padding-left: 20px;
-     padding-right: 20px;
-     padding-top: 12px;
-     padding-bottom: 12px;
- }
- 
- div.modification {
-     height: 150px;
-     width: 300px;
-     position: absolute;
-     top: 0;
-     bottom: 0;
-     left: 0;
-     right: 0;
-     margin: auto;
-     padding: 20px;
-     background-color: #6788BE;
-     box-shadow: 5px 5px 5px #888888;
- }
- 
- a IMG {
-     border: 0px;
- }
- 
- a IMG {
-     border: 0px;
- }
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #FAFAFA;
+    color: #58585A;
+    border: 0px;
+    margin: 0px;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+div.map {
+    position: fixed;
+}
+
+
+/* Dropdown Selection Box */
+
+select {
+    color: #58585A;
+    background-color: #ffffff;
+    font-weight: bolder;
+}
+
+
+/* all structures */
+
+.map div {
+    position: absolute;
+    font-size: 7pt;
+    border: 1px solid #FAFAFA;
+    background-color: #CBE2BA;
+    box-sizing: border-box;
+    padding-top: 3px;
+    padding-left: 3px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+div.cube {
+    margin: auto;
+    text-align: left;
+}
+
+div.cube:hover {
+    background-color: #81BA59;
+    box-shadow: 1px 1px 5px #888888;
+    z-index: 99;
+    transform: scale(2, 2);
+    font-size: 4pt;
+    padding-top: 1.5px;
+    padding-left: 0px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+div.office:hover {
+    background-color: #81BA59;
+    box-shadow: 1px 1px 5px #888888;
+    z-index: 99;
+    transform: scale(1.5, 1.5);
+    font-size: 5.33pt;
+    padding-top: 6.66px;
+    padding-left: 0px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+
+/* Cubes */
+
+div.meetingroom {
+    background-color: #93AACF;
+    color: #58585A;
+    text-align: center;
+}
+
+div.office {
+    background-color: #CBE2BA;
+    text-align: center;
+    vertical-align: middle;
+}
+
+div.space {
+    background-color: #afafaf;
+    text-align: center;
+}
+
+div.stair {
+    background-color: #58585A;
+    text-align: center;
+}
+
+div.reception {
+    background-color: #bfc566;
+    text-align: center;
+    margin: auto;
+}
+
+.map .reception {
+    color: #99A744;
+}
+
+div.cafe {
+    padding-right: 10px;
+    background-color: #bfc566;
+    text-align: right;
+    border: 0px;
+}
+
+
+/* Cafe Text */
+
+.map .cafe {
+    color: #58585A;
+}
+
+.map .stair {
+    color: #93AACF;
+}
+
+
+/* Utility */
+
+div.utility {
+    background-color: #93AACF;
+    text-align: center;
+}
+
+div.facility {
+    border: solid 1px #e3e3e3;
+    text-align: center;
+    background-color: #93AACF;
+}
+
+div.restroom {
+    border: solid 1px #e3e3e3;
+    background-color: #CEF6F5;
+    text-align: center;
+}
+
+img.missingPerson {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
+
+div.quote {
+    left: 140px;
+    bottom: 170px;
+    width: 180px;
+    height: 65px;
+    color: #000000;
+    position: absolute;
+    z-index: 99;
+    text-align: center;
+}
+
+img.bubble {
+    position: absolute;
+    bottom: 90px;
+    left: 95px;
+    display: block;
+    z-index: 98;
+}
+
+a.close {
+    display: block;
+    color: white;
+    font-size: 13px;
+    text-decoration: none;
+    text-transform: uppercase;
+    position: absolute;
+    top: 6px;
+    right: 10px;
+}
+
+span.bubble {
+    position: absolute;
+    bottom: 90px;
+    left: 100px;
+    width: 500px;
+    height: 500px;
+}
+
+a.button {
+    float: left;
+    text-align: center;
+    font-size: 12px;
+    color: white;
+    background-color: #6788BE;
+    padding: 8px 18px;
+    margin: 18px 0 0 20px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+a.button.save {
+    background-color: #81BA59;
+}
+
+a.button.delete {
+    background-color: #FF7E7E;
+}
+
+a.button.save:hover {
+    background-color: #6A9949;
+}
+
+a.button.delete:hover {
+    background-color: #F65A5A;
+}
+
+input {
+    width: 260px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 12px;
+    margin-top: 20px;
+    margin-left: 20px;
+    padding-bottom: 12px;
+}
+
+div.buttonbox {
+    display: flex;
+    justify-content: center;
+}
+
+div.modification {
+    height: 180px;
+    width: 300px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 20px;
+    background-color: #6788BE;
+    box-shadow: 5px 5px 5px #888888;
+}
+
+a IMG {
+    border: 0px;
+}
+
+a IMG {
+    border: 0px;
+}

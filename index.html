@@ -16,30 +16,18 @@
 </head>
 
 <body id="body" onload="init();" onresize="drawMap();" onmousemove="trackCursor(event);" scroll="no" style="overflow:hidden;">
-    <div id="overlay" class="overlay"></div>
     <div id="map" class="map"></div>
     <img src="mapguy.png" class="missingPerson" onclick="showQuote();" />
     <img src="Bubble.png" id="bubble" class="bubble" style="display:none" />
     <div id="quote" class="quote" style="display:none"></div>
     <div id="modification" class="modification" style="display:none;z-index:100;">
-        <table width="100%" border=0>
-            <tr>
-                <td><input id="name"></input>
-                </td>
-            </tr>
-            <tr>
-                <td><input id="location"></input>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <div class="button cancel" onclick="closeModification();">Cancel</div>
-                    <div class="button delete" onclick="deleteEmployee();">Delete</div>
-                    <div class="button save" onclick="commitModification();">Save</div>
-
-                </td>
-            </tr>
-        </table>
+        <input id="name"></input>
+        <input id="location"></input>
+        <div class="buttonbox">
+            <a href="#" class="button delete" onclick="deleteEmployee();">Delete</a>
+            <a href="#" class="button save" onclick="commitModification();">Save</a>
+        </div>
+        <a href="#" class="close" onclick="closeModification()">Close</a>
     </div>
 </body>
 
