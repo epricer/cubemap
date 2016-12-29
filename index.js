@@ -51,10 +51,10 @@ function init() {
 
     $.when(
         $.ajax({ url: "/employees.json", cache: false }).done(function(data) {
-            employeeModel = data;
+            employeeModel = JSON.parse(data);
         }),
         $.ajax({ url: "/map.json", cache: false }).done(function(data) {
-            mapModel = data;
+            mapModel = JSON.parse(data);
         })
     ).then(function() {
         drawMap();
