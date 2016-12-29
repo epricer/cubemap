@@ -2,6 +2,7 @@ var quotesDocument = null;
 var quoteTimer = null;
 var employeeModel;
 var mapModel;
+var quotesModel;
 
 function trackCursor(mouseEvent) {
     var xPosition = mouseEvent.clientX / getWindowWidth();
@@ -41,8 +42,9 @@ function drawMap() {
     $("#map").css("transform", "scale(" + getZoom() + "," + getZoom() + ")");
     $("#map").empty();
 
-    for (var property in mapModel.structures) {
-        drawStructures(mapModel.structures[property], mapModel.width, mapModel.height, property);
+    for (var i = 0; i < mapModel.structuregroups.length; i++) {
+        var sg = mapModel.structuregroups[i];
+        drawStructures(sg.structures, mapModel.width, mapModel.height, sg.type);
     }
 }
 
@@ -55,6 +57,9 @@ function init() {
         }),
         $.ajax({ url: "/map.json", cache: false }).done(function(data) {
             mapModel = JSON.parse(data);
+        }),
+        $.ajax({ url: "/quotes.json", cache: false }).done(function(data) {
+            quotesModel = JSON.parse(data);
         })
     ).then(function() {
         drawMap();
@@ -98,43 +103,9 @@ function getAutoScale(mapWidth, mapHeight) {
     return Math.floor(Math.min(scaleX, scaleY));
 }
 
-function selectNodes(node, xpathExpression) {
-    if (document.all) {
-        return node.selectNodes(xpathExpression);
-    } else {
-        var xpe = new XPathEvaluator();
-        var nsResolver = xpe.createNSResolver(node.ownerDocument == null ? node.documentElement : node.ownerDocument.documentElement);
-        var result = xpe.evaluate(xpathExpression, node, nsResolver, 0, null);
-        var found = [];
-        while (res = result.iterateNext()) found.push(res);
-        return found;
-    }
-}
-
-function loadXMLDoc(url) {
-    var req;
-    req = new XMLHttpRequest();
-    if (req) {
-        req.open("GET", url, false);
-        req.send(null);
-        return req.responseXML;
-    }
-}
-
-
 function getQuote() {
-    var quotesNodes = getQuotes();
-    var i = Math.round(Math.random() * (quotesNodes.length - 1));
-    return quotesNodes[i].textContent;
-}
-
-function getQuotes() {
-    return selectNodes(getQuotesDocument(), "/quotes/quote");
-}
-
-function getQuotesDocument() {
-    if (quotesDocument === null) quotesDocument = loadXMLDoc("Quotes.xml");
-    return quotesDocument;
+    var i = Math.round(Math.random() * (quotesModel.length - 1));
+    return quotesModel[i].quote;
 }
 
 function getEmployeeByStructure(structureName) {

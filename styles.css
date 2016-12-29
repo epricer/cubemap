@@ -34,30 +34,34 @@
  
  .map div {
      position: absolute;
-     font-size: 9pt;
+     font-size: 7pt;
      border: 1px solid #FAFAFA;
      background-color: #CBE2BA;
      box-sizing: border-box;
-     padding-top: 5px;
-     padding-left: 5px;
+     padding-top: 3px;
+     padding-left: 3px;
      overflow: hidden;
      z-index: 1;
  }
- /* structure hover */
  
- div.cubes:hover {
+ div.cube {
+     margin: auto;
+     text-align: left;
+ }
+ 
+ div.cube:hover {
      background-color: #81BA59;
      box-shadow: 1px 1px 5px #888888;
      z-index: 99;
-     transform: scale(1.5, 1.5);
+     transform: scale(2, 2);
      font-size: 5.33pt;
-     padding-top: 6.66px;
+     padding-top: 1.5px;
      padding-left: 0px;
      text-align: center;
      border-radius: 5px;
  }
  
- div.offices:hover {
+ div.office:hover {
      background-color: #81BA59;
      box-shadow: 1px 1px 5px #888888;
      z-index: 99;
@@ -70,22 +74,10 @@
  }
  /* Cubes */
  
- div.cubes {
-     margin: auto;
-     text-align: left;
- }
- 
- div.meetingrooms {
+ div.meetingroom {
      background-color: #93AACF;
-     text-align: center;
- }
- 
- .map .meetingrooms {
      color: #58585A;
- }
- 
- .map .cubes {
-     font-size: 7pt;
+     text-align: center;
  }
  
  div.office {
@@ -131,18 +123,18 @@
  }
  /* Utility */
  
- div.utilities {
+ div.utility {
      background-color: #93AACF;
      text-align: center;
  }
  
- div.facilities {
+ div.facility {
      border: solid 1px #e3e3e3;
      text-align: center;
      background-color: #93AACF;
  }
  
- div.restrooms {
+ div.restroom {
      border: solid 1px #e3e3e3;
      background-color: #CEF6F5;
      text-align: center;

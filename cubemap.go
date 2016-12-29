@@ -38,22 +38,31 @@ func delete(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func getEmployeeList() []employee {
-
-	fileBytes, e := ioutil.ReadFile(rootPath + "/employees.json")
-	if e != nil {
-		log.Printf("File error: %v\n", e)
-		return nil
+func loadJSONFromFile(t interface{}, filepath string) error {
+	fileBytes, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		log.Printf("File error opening %v. Reason: %v\n", filepath, err)
+		return err
 	}
 
-	employeeList := make([]employee, 0)
-
-	err := json.Unmarshal(fileBytes, &employeeList)
+	err = json.Unmarshal(fileBytes, t)
 
 	if err != nil {
-		log.Printf("Could not decode %v/employees.json for editing. Reason: %v", rootPath, err)
-		return nil
+		log.Printf("Could not decode %v for editing. Reason: %v", filepath, err)
+		return err
 	}
+	return nil
+}
+
+func getFloorplan() floorplan {
+	var f floorplan
+	loadJSONFromFile(&f, rootPath+"/map.json")
+	return f
+}
+
+func getEmployeeList() []employee {
+	employeeList := make([]employee, 0)
+	loadJSONFromFile(&employeeList, rootPath+"/employees.json")
 	return employeeList
 }
 
@@ -77,19 +86,33 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 	var newEmpInfo change
 	if req.Body == nil {
 		log.Printf("Request body is nil")
-		http.Error(w, "Please send a request body", 400)
+		http.Error(w, "Please send a request body", http.StatusBadRequest)
 		return
 	}
 	err := json.NewDecoder(req.Body).Decode(&newEmpInfo)
 	if err != nil {
-		log.Printf("error decoding request: %+v", err)
+		log.Printf("error decoding request: %+v", http.StatusBadRequest)
 		http.Error(w, err.Error(), 400)
 		return
 	}
 
 	//TODO: Make sure the structure exists and is editable!
-
+	fp := getFloorplan()
 	employeeList := getEmployeeList()
+
+	structureOkay := false
+	for _, sg := range fp.StructureGroups {
+		for _, s := range sg.Structures {
+			if s.Name == newEmpInfo.Structure {
+				structureOkay = (s.Editable == true)
+				break
+			}
+		}
+	}
+
+	if !structureOkay {
+		http.Error(w, "That structure doesn't exist or is uneditable", http.StatusUnauthorized)
+	}
 
 	// make sure the user didn't try to change to a name that is already taken
 	if newEmpInfo.PreviousName != newEmpInfo.Name {
@@ -124,10 +147,31 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 	saveEmployeeList(employeeList)
 }
 
+type floorplan struct {
+	Height          int              `json:"height"`
+	Width           int              `json:"width"`
+	StructureGroups []structuregroup `json:"structuregroups"`
+}
+
+type structuregroup struct {
+	Type       string      `json:"type"`
+	Structures []structure `json:"structures"`
+}
+
+type structure struct {
+	Name     string `json:"name"`
+	X        int    `json:"x"`
+	Y        int    `json:"y"`
+	Width    int    `json:"width"`
+	Height   int    `json:"height"`
+	Editable bool   `json:"editable"`
+}
+
 type employee struct {
 	Name      string `json:"name"`
 	Structure string `json:"structure"`
 }
+
 type change struct {
 	Name         string `json:"name"`
 	Structure    string `json:"structure"`
