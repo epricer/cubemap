@@ -15,16 +15,30 @@
     <img src="mapguy.png" class="missingPerson" onclick="showQuote();" />
     <img src="Bubble.png" id="bubble" class="bubble" style="display:none" />
     <div id="quote" class="quote" style="display:none"></div>
+
     <div id="modification" class="modification" style="display:none;z-index:100;">
-        <input id="name"></input>
-        <input id="location"></input>
-        <div class="buttonbox">
-            <a href="#" class="button delete" onclick="deleteEmployee();">Delete</a>
-            <a href="#" class="button save" onclick="commitModification();">Save</a>
-            <a href="#" class="button photo" onclick="takePhoto();">Save</a>
+        <div id="controls">
+            <input id="name"></input>
+            <input id="location"></input>
+            <div style="text-align: center">
+                <a href="#" class="photo" onclick="showCamera();">
+                    <img id="photo" class="photo" src="missing.png" alt="Photo">
+                </a>
+            </div>
+            <div class="buttonbox">
+                <a href="#" class="button delete" onclick="deleteEmployee();">Delete</a>
+                <a href="#" class="button save" onclick="commitModification();">Save</a>
+            </div>
         </div>
-        <a href="#" class="close" onclick="closeModification()">Close</a>
+        <div id="camera">
+            <video id="video" width="260" height="195" autoplay></video>
+            <canvas id="still" width="120" height="90"></canvas>
+            <canvas id="crop" width="80" height="90"></canvas>
+        </div>
+        <a href="# " class="close " onclick="closeModifyDialog() ">Close</a>
     </div>
 </body>
+
+
 
 </html>

@@ -136,15 +136,56 @@ function showModifyDialog(structure) {
 
     $("#location").val(structure.name);
     $("#name").val(employeeName);
+    $("#photo").val("src", (employee === null || employee.photo === null) ? "missing.png" : employee.photo);
     $("#name").data("oldvalue", employeeName);
     $("#modification").css("display", "block");
     $("#name").focus();
 }
 
-function closeModification() {
+function closeModifyDialog() {
     $("#map").css("filter", "");
     $("#modification").css("display", "none");
+    $("#controls").css("display", "block");
+    $("#camera").css("display", "none");
+
 }
+
+
+
+function showCamera() {
+    $("#controls").css("display", "none");
+    $("#camera").css("display", "block");
+    // Grab elements, create settings, etc.
+    var still = document.getElementById('still');
+    var stillContext = still.getContext('2d');
+    var crop = document.getElementById('crop');
+    var cropContext = crop.getContext('2d');
+    var video = document.getElementById('video');
+    var mediaConfig = { video: true };
+    var errBack = function(e) {
+        console.log('An error has occurred!', e)
+    };
+
+    // Put video listeners into place
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia(mediaConfig).then(function(stream) {
+            video.src = window.URL.createObjectURL(stream);
+            video.play();
+        });
+    }
+
+    // Trigger photo take
+    document.getElementById('video').addEventListener('click', function() {
+        stillContext.drawImage(video, 0, 0, 120, 90);
+        cropContext.drawImage(still, 20, 0, 80, 90, 0, 0, 80, 90);
+        $("#photo").attr("src", crop.toDataURL("image/jpeg", 0.7));
+        $("#controls").css("display", "block");
+        $("#camera").css("display", "none");
+        console.log(still.toDataURL("image/jpeg", 0.7));
+    });
+}
+
+
 
 function deleteEmployee() {
     var name = $("#name").val().trim();
@@ -154,7 +195,7 @@ function deleteEmployee() {
     else {
         $.post("/delete?name=" + name)
             .done(function() {
-                closeModification();
+                closeModifyDialog();
                 init();
             });
     }
@@ -164,12 +205,13 @@ function commitModification() {
 
     var employeeName = $("#name").val().trim();
     var newLocation = $("#location").val().trim();
+    var photo = $("#photo").attr("src");
     if ((employeeName === "") || (newLocation === "")) {
         alert("You must enter a name (Firstname Lastname) and provide a location (cube number)");
     } else {
-        $.post("/setlocation", JSON.stringify({ "name": employeeName, "structure": newLocation, "previousname": $("#name").data("oldvalue") }))
+        $.post("/setlocation", JSON.stringify({ "name": employeeName, "structure": newLocation, "previousname": $("#name").data("oldvalue"), "photo": photo }))
             .done(function(data) {
-                closeModification();
+                closeModifyDialog();
                 init();
             });
     }
