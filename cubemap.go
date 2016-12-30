@@ -199,10 +199,12 @@ type structure struct {
 type employee struct {
 	Name      string `json:"name"`
 	Structure string `json:"structure"`
+	Photo     string `json:"photo"`
 }
 
 type change struct {
 	Name         string `json:"name"`
 	Structure    string `json:"structure"`
 	PreviousName string `json:"previousname"`
+	Photo        string `json:"photo"`
 }

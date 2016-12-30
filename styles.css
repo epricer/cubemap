@@ -234,7 +234,7 @@ div.buttonbox {
 }
 
 div.modification {
-    height: 180px;
+    height: 280px;
     width: 300px;
     position: absolute;
     top: 0;
@@ -247,10 +247,23 @@ div.modification {
     box-shadow: 5px 5px 5px #888888;
 }
 
-a IMG {
-    border: 0px;
+div.camera {
+    display: none;
 }
 
-a IMG {
-    border: 0px;
+video {
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+div#camera canvas {
+    display: none;
+}
+
+img.photo {
+    width: 80px;
+    margin-top: 20px;
+    border-style: solid;
+    border-color: #aaa;
+    border-width: 1px;
 }
