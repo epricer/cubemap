@@ -1,4 +1,3 @@
-var quotesDocument = null;
 var quoteTimer = null;
 var employeeModel;
 var mapModel;
@@ -52,14 +51,14 @@ function drawMap() {
 function init() {
 
     $.when(
-        $.ajax({ url: "/employees.json", cache: false }).done(function(data) {
-            employeeModel = JSON.parse(data);
+        $.ajax({ url: "/employees", cache: false }).done(function(data) {
+            employeeModel = data;
         }),
-        $.ajax({ url: "/map.json", cache: false }).done(function(data) {
-            mapModel = JSON.parse(data);
+        $.ajax({ url: "/map", cache: false }).done(function(data) {
+            mapModel = data;
         }),
-        $.ajax({ url: "/quotes.json", cache: false }).done(function(data) {
-            quotesModel = JSON.parse(data);
+        $.ajax({ url: "/quotes", cache: false }).done(function(data) {
+            quotesModel = data;
         })
     ).then(function() {
         drawMap();
@@ -139,6 +138,7 @@ function showModifyDialog(structure) {
     $("#name").val(employeeName);
     $("#name").data("oldvalue", employeeName);
     $("#modification").css("display", "block");
+    $("#name").focus();
 }
 
 function closeModification() {
