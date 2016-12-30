@@ -11,5 +11,7 @@
 * `$go run cubemap.go -port [desired port]`
 
 ### TODO ###
-* this project was originally written in 2004, and hasn't really been updated since (except porting it to 'go'). It should make use of modern idioms, and probably something like jquery to simplify the code. 
-* remove the cruft of the past 13 years as this has been passed around.
+* generate the json files as templates with a command line flag
+* add pictures
+* maybe remove the quotes functionality
+* scroll to zoom
