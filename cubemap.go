@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 var rootPath = ""
@@ -18,12 +19,34 @@ func main() {
 	flag.Parse()
 	log.Printf("Cubemap serving from \"%v\" on port %v...\n", rootPath, *serverPort)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(rootPath))))
-	http.HandleFunc("/setlocation", setLocation)
-	http.HandleFunc("/delete", delete)
+	http.HandleFunc("/setlocation", handleSetLocation)
+	http.HandleFunc("/delete", handleDelete)
+	http.HandleFunc("/quotes", func(w http.ResponseWriter, r *http.Request) {
+		serveJSON(w, r, getQuotes())
+	})
+	http.HandleFunc("/map", func(w http.ResponseWriter, r *http.Request) {
+		serveJSON(w, r, getFloorplan())
+	})
+	http.HandleFunc("/employees", func(w http.ResponseWriter, r *http.Request) {
+		serveJSON(w, r, getEmployeeList())
+	})
+
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", *serverPort), nil))
 }
 
-func delete(w http.ResponseWriter, req *http.Request) {
+func serveJSON(w http.ResponseWriter, req *http.Request, v interface{}) {
+
+	jsonData, err := json.Marshal(v)
+	if err != nil {
+		http.Error(w, "Bad json data", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonData)
+}
+
+func handleDelete(w http.ResponseWriter, req *http.Request) {
 	name := req.URL.Query().Get("name")
 	employeeList := getEmployeeList()
 
@@ -54,6 +77,12 @@ func loadJSONFromFile(t interface{}, filepath string) error {
 	return nil
 }
 
+func getQuotes() []quote {
+	quotes := make([]quote, 0)
+	loadJSONFromFile(&quotes, rootPath+"/quotes.json")
+	return quotes
+}
+
 func getFloorplan() floorplan {
 	var f floorplan
 	loadJSONFromFile(&f, rootPath+"/map.json")
@@ -81,7 +110,7 @@ func saveEmployeeList(employeeList []employee) {
 	}
 }
 
-func setLocation(w http.ResponseWriter, req *http.Request) {
+func handleSetLocation(w http.ResponseWriter, req *http.Request) {
 
 	var newEmpInfo change
 	if req.Body == nil {
@@ -117,21 +146,10 @@ func setLocation(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// make sure the user didn't try to change to a name that is already taken
-	if newEmpInfo.PreviousName != newEmpInfo.Name {
-		for _, employee := range employeeList {
-			if employee.Name == newEmpInfo.Name {
-				log.Printf("Name %v already exists ", newEmpInfo.Name)
-				http.Error(w, "Can't change to an existing name", http.StatusConflict)
-				return
-			}
-		}
-	}
-
 	var isnew = true
 	for i, employee := range employeeList {
-		if employee.Name == newEmpInfo.PreviousName {
-			log.Printf("Updating existing %v as %v", employee.Name, newEmpInfo.Name)
+		if (employee.Name == newEmpInfo.PreviousName) || ((employee.Name == newEmpInfo.Name) && len(strings.TrimSpace(newEmpInfo.PreviousName)) == 0) {
+			log.Printf("Updating existing %v as %v in %v", employee.Name, newEmpInfo.Name, newEmpInfo.Structure)
 
 			isnew = false
 			employee.Structure = newEmpInfo.Structure
@@ -158,6 +176,10 @@ type floorplan struct {
 	Height          int              `json:"height"`
 	Width           int              `json:"width"`
 	StructureGroups []structuregroup `json:"structuregroups"`
+}
+
+type quote struct {
+	Quote string `json:"quote"`
 }
 
 type structuregroup struct {
