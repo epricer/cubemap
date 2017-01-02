@@ -2,6 +2,7 @@ var quoteTimer = null;
 var employeeModel;
 var mapModel;
 var quotesModel;
+var cameraStream;
 
 function trackCursor(mouseEvent) {
     var xPosition = mouseEvent.clientX / getWindowWidth();
@@ -136,7 +137,8 @@ function showModifyDialog(structure) {
 
     $("#location").val(structure.name);
     $("#name").val(employeeName);
-    $("#photo").val("src", (employee === null || employee.photo === null) ? "missing.png" : employee.photo);
+
+    $("#photo").attr("src", (employee && employee.photo) ? employee.photo : "missing.png");
     $("#name").data("oldvalue", employeeName);
     $("#modification").css("display", "block");
     $("#name").focus();
@@ -147,42 +149,55 @@ function closeModifyDialog() {
     $("#modification").css("display", "none");
     $("#controls").css("display", "block");
     $("#camera").css("display", "none");
+    hideCamera();
+}
 
+function hideCamera() {
+    var tracks = cameraStream.getTracks();
+    for (var i = 0; i < tracks.length; i++) {
+        tracks[i].stop();
+        $("#video").removeAttr("src");
+    }
+    $("#video").attr("src", null);
 }
 
 
 
 function showCamera() {
-    $("#controls").css("display", "none");
-    $("#camera").css("display", "block");
-    // Grab elements, create settings, etc.
-    var still = document.getElementById('still');
-    var stillContext = still.getContext('2d');
-    var crop = document.getElementById('crop');
-    var cropContext = crop.getContext('2d');
-    var video = document.getElementById('video');
+
     var mediaConfig = { video: true };
-    var errBack = function(e) {
-        console.log('An error has occurred!', e)
-    };
 
     // Put video listeners into place
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia(mediaConfig).then(function(stream) {
-            video.src = window.URL.createObjectURL(stream);
+            cameraStream = stream;
+            var video = $('#video')[0];
+            $("#controls").css("display", "none");
+            $("#camera").css("display", "block");
+            video.src = window.URL.createObjectURL(cameraStream);
             video.play();
+
+        }).catch(function(err) {
+            alert("Can't access camera");
         });
     }
+}
 
-    // Trigger photo take
-    document.getElementById('video').addEventListener('click', function() {
-        stillContext.drawImage(video, 0, 0, 120, 90);
-        cropContext.drawImage(still, 20, 0, 80, 90, 0, 0, 80, 90);
-        $("#photo").attr("src", crop.toDataURL("image/jpeg", 0.7));
-        $("#controls").css("display", "block");
-        $("#camera").css("display", "none");
-        console.log(still.toDataURL("image/jpeg", 0.7));
-    });
+function takePhoto() {
+    var still = $("#still")[0];
+    var stillContext = still.getContext('2d');
+
+    var crop = $("#crop")[0];
+    var cropContext = crop.getContext('2d');
+
+    var video = $('#video')[0];
+
+    stillContext.drawImage(video, 0, 0, 120, 90);
+    cropContext.drawImage(still, 20, 0, 80, 90, 0, 0, 80, 90);
+    $("#photo").attr("src", crop.toDataURL("image/jpeg", 0.7));
+    $("#controls").css("display", "block");
+    $("#camera").css("display", "none");
+    hideCamera();
 }
 
 
@@ -209,7 +224,7 @@ function commitModification() {
     if ((employeeName === "") || (newLocation === "")) {
         alert("You must enter a name (Firstname Lastname) and provide a location (cube number)");
     } else {
-        $.post("/setlocation", JSON.stringify({ "name": employeeName, "structure": newLocation, "previousname": $("#name").data("oldvalue"), "photo": photo }))
+        $.post("/update", JSON.stringify({ "name": employeeName, "structure": newLocation, "previousname": $("#name").data("oldvalue"), "photo": photo }))
             .done(function(data) {
                 closeModifyDialog();
                 init();

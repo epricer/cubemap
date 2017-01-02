@@ -19,7 +19,7 @@ func main() {
 	flag.Parse()
 	log.Printf("Cubemap serving from \"%v\" on port %v...\n", rootPath, *serverPort)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(rootPath))))
-	http.HandleFunc("/setlocation", handleSetLocation)
+	http.HandleFunc("/update", handleUpdate)
 	http.HandleFunc("/delete", handleDelete)
 	http.HandleFunc("/quotes", func(w http.ResponseWriter, r *http.Request) {
 		serveJSON(w, r, getQuotes())
@@ -110,7 +110,7 @@ func saveEmployeeList(employeeList []employee) {
 	}
 }
 
-func handleSetLocation(w http.ResponseWriter, req *http.Request) {
+func handleUpdate(w http.ResponseWriter, req *http.Request) {
 
 	var newEmpInfo change
 	if req.Body == nil {
@@ -125,7 +125,7 @@ func handleSetLocation(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	//TODO: Make sure the structure exists and is editable!
+	//TODO: Make sure the selected structure exists and is editable!
 	fp := getFloorplan()
 	employeeList := getEmployeeList()
 
@@ -146,29 +146,27 @@ func handleSetLocation(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var isnew = true
-	for i, employee := range employeeList {
-		if (employee.Name == newEmpInfo.PreviousName) || ((employee.Name == newEmpInfo.Name) && len(strings.TrimSpace(newEmpInfo.PreviousName)) == 0) {
-			log.Printf("Updating existing %v as %v in %v", employee.Name, newEmpInfo.Name, newEmpInfo.Structure)
-
-			isnew = false
-			employee.Structure = newEmpInfo.Structure
-			employee.Name = newEmpInfo.Name
-			employeeList[i] = employee
-			w.WriteHeader(http.StatusNoContent)
-			break
-		}
-	}
-
-	if isnew {
-		// add'
+	if len(newEmpInfo.PreviousName) == 0 {
+		// new person
 		log.Printf("Adding new person %v", newEmpInfo.Name)
-		var emp = employee{Name: newEmpInfo.Name, Structure: newEmpInfo.Structure}
+		var emp = employee{Name: newEmpInfo.Name, Structure: newEmpInfo.Structure, Photo: newEmpInfo.Photo}
 		employeeList = append(employeeList, emp)
 		w.WriteHeader(http.StatusCreated)
 		fmt.Fprintf(w, "%+v", emp)
+	} else {
+		// updated person
+		for i, employee := range employeeList {
+			if (employee.Name == newEmpInfo.PreviousName) || ((employee.Name == newEmpInfo.Name) && len(strings.TrimSpace(newEmpInfo.PreviousName)) == 0) {
+				log.Printf("Updating existing %v as %v in %v", employee.Name, newEmpInfo.Name, newEmpInfo.Structure)
+				employee.Structure = newEmpInfo.Structure
+				employee.Name = newEmpInfo.Name
+				employee.Photo = newEmpInfo.Photo
+				employeeList[i] = employee
+				w.WriteHeader(http.StatusNoContent)
+				break
+			}
+		}
 	}
-
 	saveEmployeeList(employeeList)
 }
 
