@@ -31,7 +31,9 @@
             </div>
         </div>
         <div id="camera">
-            <video id="video" width="260" height="195" autoplay></video>
+            <div id="cropbox" class="cropbox">
+                <video id="video" width="260" height="195" autoplay onclick="takePhoto();"></video>
+            </div>
             <canvas id="still" width="120" height="90"></canvas>
             <canvas id="crop" width="80" height="90"></canvas>
         </div>

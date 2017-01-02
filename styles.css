@@ -222,10 +222,11 @@ input {
     box-sizing: border-box;
     padding-left: 20px;
     padding-right: 20px;
-    padding-top: 12px;
+    padding-top: 8px;
     margin-top: 20px;
     margin-left: 20px;
     padding-bottom: 12px;
+    font-size: 13px;
 }
 
 div.buttonbox {
@@ -254,6 +255,21 @@ div.camera {
 video {
     padding-left: 20px;
     padding-top: 20px;
+}
+
+div#cropbox:before {
+    position: absolute;
+    content: "";
+    height: 193px;
+    width: 171px;
+    margin-left: 63.5px;
+    margin-top: 20px;
+    z-index: 1;
+    pointer-events: none;
+    /* background-color: purple; */
+    border-style: dotted;
+    border-width: thin;
+    border-color: white;
 }
 
 div#camera canvas {
