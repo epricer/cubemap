@@ -24,9 +24,6 @@ select {
     font-weight: bolder;
 }
 
-
-/* all structures */
-
 .map div {
     position: absolute;
     font-size: 7pt;
@@ -266,7 +263,6 @@ div#cropbox:before {
     margin-top: 20px;
     z-index: 1;
     pointer-events: none;
-    /* background-color: purple; */
     border-style: dotted;
     border-width: thin;
     border-color: white;
@@ -276,10 +272,16 @@ div#camera canvas {
     display: none;
 }
 
-img.photo {
+img.editphoto {
     width: 80px;
+    height: 90px;
     margin-top: 20px;
     border-style: solid;
     border-color: #aaa;
     border-width: 1px;
+}
+
+img.mapphoto {
+    width: 80px;
+    height: 90px;
 }
