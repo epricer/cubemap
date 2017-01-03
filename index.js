@@ -143,8 +143,8 @@ var mapapp = (function () {
             mapapp.hideQuote();
             $("#bubble").css("display", "block");
             $("#quote").css("display", "block");
-            $("#quote").html(getQuote());
-            quoteTimer = window.setTimeout(hideQuote, 3000);
+            $("#quote").html(mapapp.getQuote());
+            quoteTimer = window.setTimeout(mapapp.hideQuote, 3000);
         },
 
         hideQuote: function () {
