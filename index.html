@@ -6,13 +6,13 @@
     <title>Cube Map</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <META HTTP-EQUIV="Expires" CONTENT="0">
-    <script language="javascript" src="index.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script language="javascript" src="index.js"></script>
 </head>
 
-<body id="body" onload="init();" onresize="drawMap();" onmousemove="trackCursor(event);" scroll="no" style="overflow:hidden;">
+<body id="body" scroll="no" style="overflow:hidden;">
     <div id="map" class="map"></div>
-    <img src="mapguy.png" class="missingPerson" onclick="showQuote();" />
+    <img id="mascot" src="mapguy.png" class="missingPerson" />
     <img src="Bubble.png" id="bubble" class="bubble" style="display:none" />
     <div id="quote" class="quote" style="display:none"></div>
 
@@ -21,23 +21,23 @@
             <input id="name"></input>
             <input id="location"></input>
             <div style="text-align: center">
-                <a href="#" class="photo" onclick="showCamera();">
-                    <img id="photo" class="photo" src="missing.png" alt="Photo">
+                <a href="#" class="photo">
+                    <img id="photo" class="editphoto" src="missing.png" alt="Photo">
                 </a>
             </div>
             <div class="buttonbox">
-                <a href="#" class="button delete" onclick="deleteEmployee();">Delete</a>
-                <a href="#" class="button save" onclick="commitModification();">Save</a>
+                <a href="#" id="deletebutton" class="button delete">Delete</a>
+                <a href="#" id="savebutton" class="button save">Save</a>
             </div>
         </div>
         <div id="camera">
             <div id="cropbox" class="cropbox">
-                <video id="video" width="260" height="195" autoplay onclick="takePhoto();"></video>
+                <video id="video" width="260" height="195" autoplay></video>
             </div>
             <canvas id="still" width="120" height="90"></canvas>
             <canvas id="crop" width="80" height="90"></canvas>
         </div>
-        <a href="# " class="close " onclick="closeModifyDialog() ">Close</a>
+        <a href="#" id="closebutton" class="close">Close</a>
     </div>
 </body>
 
