@@ -13,6 +13,6 @@
 
 ### TODO ###
 * generate the json files as templates with a command line flag
-* add pictures
-* ~~maybe remove the quotes functionality~~
+* ~~add pictures~~
+* maybe remove the quotes functionality
 * scroll to zoom
