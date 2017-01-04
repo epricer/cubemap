@@ -3,7 +3,7 @@ $(document).ready(function() {
     mapapp.init();
 });
 
-var mapapp = (function () {
+var mapapp = (function() {
 
     var quoteTimer = null;
     var employeeModel;
@@ -23,24 +23,24 @@ var mapapp = (function () {
             $("#mascot").on('click', mapapp.showQuote);
         },
 
-        init: function () {
-            
+        init: function() {
+
             $.when(
-                $.ajax({ url: "/employees", cache: false }).done(function (data) {
+                $.ajax({ url: "/employees", cache: false }).done(function(data) {
                     employeeModel = data;
                 }),
-                $.ajax({ url: "/map", cache: false }).done(function (data) {
+                $.ajax({ url: "/map", cache: false }).done(function(data) {
                     mapModel = data;
                 }),
-                $.ajax({ url: "/quotes", cache: false }).done(function (data) {
+                $.ajax({ url: "/quotes", cache: false }).done(function(data) {
                     quotesModel = data;
                 })
-            ).then(function () {
+            ).then(function() {
                 mapapp.drawMap();
             });
         },
 
-        trackCursor: function (mouseEvent) {
+        trackCursor: function(mouseEvent) {
             var xPosition = mouseEvent.clientX / mapapp.getWindowWidth();
             var yPosition = mouseEvent.clientY / mapapp.getWindowHeight();
 
@@ -52,29 +52,29 @@ var mapapp = (function () {
             $("#map").css("top", top);
         },
 
-        getZoom: function () {
+        getZoom: function() {
             return 1.3;
         },
 
-        getWindowWidth: function () {
+        getWindowWidth: function() {
             return $(window).width();
         },
 
-        getWindowHeight: function () {
+        getWindowHeight: function() {
             return $(window).height();
         },
 
-        getZoomWidth: function () {
+        getZoomWidth: function() {
             if (mapModel.width * mapapp.getAutoScale(mapModel.width, mapModel.height) * mapapp.getZoom() < mapapp.getWindowWidth()) return null;
             return mapapp.getWindowWidth() * mapapp.getZoom();
         },
 
-        getZoomHeight: function () {
+        getZoomHeight: function() {
             if (mapModel.height * mapapp.getAutoScale(mapModel.width, mapModel.height) * mapapp.getZoom() < mapapp.getWindowHeight()) return null;
             return mapapp.getWindowHeight() * mapapp.getZoom();
         },
 
-        drawMap: function () {
+        drawMap: function() {
             $("#map").css("transform", "scale(" + mapapp.getZoom() + "," + mapapp.getZoom() + ")");
             $("#map").empty();
 
@@ -84,7 +84,7 @@ var mapapp = (function () {
             }
         },
 
-        drawStructures: function (structures, mapWidth, mapHeight, type) {
+        drawStructures: function(structures, mapWidth, mapHeight, type) {
             var scale = mapapp.getAutoScale(mapWidth, mapHeight);
             for (var i = 0; i < structures.length; i++) {
                 var structure = structures[i];
@@ -97,15 +97,13 @@ var mapapp = (function () {
                 structureDiv.attr("id", structure.name); // todo: is this needed?
                 structureDiv.data("structure", structure);
 
-
-
                 var employee = mapapp.getEmployeeByStructure(structure.name);
                 if (employee !== null) {
                     structureDiv.html(employee.name.split(" ").join("<br />"));
-/*                    var photoDiv = $("<img></img>");
-                    photoDiv.attr("src", employee.photo);
-                    photoDiv.addClass("mapphoto");
-                    structureDiv.append(photoDiv);*/
+                    /*                    var photoDiv = $("<img></img>");
+                                        photoDiv.attr("src", employee.photo);
+                                        photoDiv.addClass("mapphoto");
+                                        structureDiv.append(photoDiv);*/
                 } else {
                     structureDiv.html(structure.name);
                 }
@@ -119,19 +117,19 @@ var mapapp = (function () {
             }
         },
 
-        getAutoScale: function (mapWidth, mapHeight) {
+        getAutoScale: function(mapWidth, mapHeight) {
             // calculate a scaling factor that maximizes the map in the available screen
             var scaleX = $(window).width() / mapWidth;
             var scaleY = $(window).height() / mapHeight;
             return Math.floor(Math.min(scaleX, scaleY));
         },
 
-        getQuote: function () {
+        getQuote: function() {
             var i = Math.round(Math.random() * (quotesModel.length - 1));
             return quotesModel[i].quote;
         },
 
-        getEmployeeByStructure: function (structureName) {
+        getEmployeeByStructure: function(structureName) {
 
             for (var i = 0; i < employeeModel.length; i++) {
                 if (employeeModel[i].structure === structureName) return employeeModel[i];
@@ -139,7 +137,7 @@ var mapapp = (function () {
             return null;
         },
 
-        showQuote: function () {
+        showQuote: function() {
             mapapp.hideQuote();
             $("#bubble").css("display", "block");
             $("#quote").css("display", "block");
@@ -147,13 +145,13 @@ var mapapp = (function () {
             quoteTimer = window.setTimeout(mapapp.hideQuote, 3000);
         },
 
-        hideQuote: function () {
+        hideQuote: function() {
             window.clearTimeout(quoteTimer);
             $("#bubble").css("display", "none");
             $("#quote").css("display", "none");
         },
 
-        showModifyDialog: function (structure) {
+        showModifyDialog: function(structure) {
             var employee = mapapp.getEmployeeByStructure(structure.name);
             var employeeName = (employee === null) ? "" : employee.name;
             $("#map").css("filter", "blur(3px)");
@@ -167,7 +165,7 @@ var mapapp = (function () {
             $("#name").focus();
         },
 
-        closeModifyDialog: function () {
+        closeModifyDialog: function() {
             $("#map").css("filter", "");
             $("#modification").css("display", "none");
             $("#controls").css("display", "block");
@@ -175,7 +173,7 @@ var mapapp = (function () {
             mapapp.hideCamera();
         },
 
-        hideCamera: function () {
+        hideCamera: function() {
             if (cameraStream) {
                 var tracks = cameraStream.getTracks();
                 for (var i = 0; i < tracks.length; i++) {
@@ -186,12 +184,12 @@ var mapapp = (function () {
             $("#video").attr("src", null);
         },
 
-        showCamera: function () {
+        showCamera: function() {
             var mediaConfig = { video: true };
 
             // Put video listeners into place
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia(mediaConfig).then(function (stream) {
+                navigator.mediaDevices.getUserMedia(mediaConfig).then(function(stream) {
                     cameraStream = stream;
                     var video = $('#video')[0];
                     $("#controls").css("display", "none");
@@ -199,13 +197,13 @@ var mapapp = (function () {
                     video.src = window.URL.createObjectURL(cameraStream);
                     video.play();
 
-                }).catch(function (err) {
+                }).catch(function(err) {
                     alert("Can't access camera");
                 });
             }
         },
 
-        takePhoto: function () {
+        takePhoto: function() {
             var still = $("#still")[0];
             var stillContext = still.getContext('2d');
 
@@ -222,21 +220,21 @@ var mapapp = (function () {
             mapapp.hideCamera();
         },
 
-        deleteEmployee: function () {
+        deleteEmployee: function() {
             var name = $("#name").val().trim();
 
             if (name === "")
                 alert("You must select a name to delete");
             else {
                 $.post("/delete?name=" + name)
-                    .done(function () {
+                    .done(function() {
                         mapapp.closeModifyDialog();
                         mapapp.init();
                     });
             }
         },
 
-        commitModification: function () {
+        commitModification: function() {
 
             var employeeName = $("#name").val().trim();
             var newLocation = $("#location").val().trim();
@@ -245,7 +243,7 @@ var mapapp = (function () {
                 alert("You must enter a name (Firstname Lastname) and provide a location (cube number)");
             } else {
                 $.post("/update", JSON.stringify({ "name": employeeName, "structure": newLocation, "previousname": $("#name").data("oldvalue"), "photo": photo }))
-                    .done(function (data) {
+                    .done(function(data) {
                         mapapp.closeModifyDialog();
                         mapapp.init();
                     });
@@ -253,4 +251,3 @@ var mapapp = (function () {
         }
     };
 })();
-
