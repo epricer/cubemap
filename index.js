@@ -21,6 +21,38 @@ var mapapp = (function() {
             $("#photo").on('click', mapapp.showCamera);
             $("#video").on('click', mapapp.takePhoto);
             $("#mascot").on('click', mapapp.showQuote);
+
+            mapapp.bindClickEdit($("#namelabel"), $("#name"));
+        },
+
+        bindClickEdit: function(label, input) {
+            input.hide();
+            label.click(mapapp.editField.bind(this, label, input));
+            input.focusout(mapapp.endEditField.bind(this, label, input));
+            input.keyup(function(e) {
+                if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+                    mapapp.endEditField(label, input);
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+        },
+
+        editField: function(label, input) {
+            input.val(label.html());
+            label.hide();
+            input.show();
+            input.focus();
+        },
+
+        endEditField: function(label, input) {
+            if (label.html() != input.val()) {
+                label.html(input.val());
+                mapapp.commitModification();
+            }
+            label.show();
+            input.hide();
         },
 
         init: function() {
@@ -100,12 +132,8 @@ var mapapp = (function() {
                 var employee = mapapp.getEmployeeByStructure(structure.name);
                 if (employee !== null) {
                     structureDiv.html(employee.name.split(" ").join("<br />"));
-                    /*                    var photoDiv = $("<img></img>");
-                                        photoDiv.attr("src", employee.photo);
-                                        photoDiv.addClass("mapphoto");
-                                        structureDiv.append(photoDiv);*/
                 } else {
-                    structureDiv.html(structure.name);
+                    if (!structure.editable) structureDiv.html(structure.name);
                 }
 
                 if (structure.editable) {
@@ -156,13 +184,14 @@ var mapapp = (function() {
             var employeeName = (employee === null) ? "" : employee.name;
             $("#map").css("filter", "blur(3px)");
 
-            $("#location").val(structure.name);
-            $("#name").val(employeeName);
+            $("#locationlabel").html(structure.name);
+            $("#namelabel").html(employeeName);
 
             $("#photo").attr("src", (employee && employee.photo) ? employee.photo : "missing.png");
-            $("#name").data("oldvalue", employeeName);
             $("#modification").css("display", "block");
-            $("#name").focus();
+            $("#modification").data("structurename", structure.name);
+            $("#modification").data("previousname", employeeName);
+            if (!$("#namelabel").html()) $("#namelabel").click();
         },
 
         closeModifyDialog: function() {
@@ -218,35 +247,46 @@ var mapapp = (function() {
             $("#controls").css("display", "block");
             $("#camera").css("display", "none");
             mapapp.hideCamera();
+            mapapp.commitModification();
         },
 
-        deleteEmployee: function() {
-            var name = $("#name").val().trim();
-
-            if (name === "")
-                alert("You must select a name to delete");
-            else {
-                $.post("/delete?name=" + name)
-                    .done(function() {
-                        mapapp.closeModifyDialog();
-                        mapapp.init();
-                    });
+        removeEmployeeByName: function(name) {
+            for (var i = 0; i < employeeModel.length; i++) {
+                if (employeeModel[i].name === name) {
+                    employeeModel.splice(i, 1);
+                    break;
+                }
             }
         },
 
         commitModification: function() {
 
-            var employeeName = $("#name").val().trim();
-            var newLocation = $("#location").val().trim();
+            var newName = $("#name").val().trim();
+            var previousName = $("#modification").data("previousname");
+            var structureName = $("#modification").data("structurename");
             var photo = $("#photo").attr("src");
-            if ((employeeName === "") || (newLocation === "")) {
-                alert("You must enter a name (Firstname Lastname) and provide a location (cube number)");
-            } else {
-                $.post("/update", JSON.stringify({ "name": employeeName, "structure": newLocation, "previousname": $("#name").data("oldvalue"), "photo": photo }))
-                    .done(function(data) {
+            if (previousName && !newName) {
+                $.post("/delete?name=" + previousName)
+                    .done(function() {
+                        mapapp.removeEmployeeByName(previousName);
+                        mapapp.drawMap();
                         mapapp.closeModifyDialog();
-                        mapapp.init();
                     });
+            } else {
+                $.post("/update",
+                        JSON.stringify({
+                            "name": newName,
+                            "structure": structureName,
+                            "previousname": previousName,
+                            "photo": photo
+                        }))
+                    .done(function(updatedEmployee) {
+                        $("#modification").data("previousname", updatedEmployee.name);
+                        mapapp.removeEmployeeByName(previousName);
+                        employeeModel.push(updatedEmployee);
+                        mapapp.drawMap();
+                    });
+
             }
         }
     };
