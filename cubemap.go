@@ -22,19 +22,19 @@ func main() {
 	http.HandleFunc("/update", handleUpdate)
 	http.HandleFunc("/delete", handleDelete)
 	http.HandleFunc("/quotes", func(w http.ResponseWriter, r *http.Request) {
-		serveJSON(w, r, getQuotes())
+		serveJSON(w, r, http.StatusOK, getQuotes())
 	})
 	http.HandleFunc("/map", func(w http.ResponseWriter, r *http.Request) {
-		serveJSON(w, r, getFloorplan())
+		serveJSON(w, r, http.StatusOK, getFloorplan())
 	})
 	http.HandleFunc("/employees", func(w http.ResponseWriter, r *http.Request) {
-		serveJSON(w, r, getEmployeeList())
+		serveJSON(w, r, http.StatusOK, getEmployeeList())
 	})
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", *serverPort), nil))
 }
 
-func serveJSON(w http.ResponseWriter, req *http.Request, v interface{}) {
+func serveJSON(w http.ResponseWriter, req *http.Request, statusCode int, v interface{}) {
 
 	jsonData, err := json.Marshal(v)
 	if err != nil {
@@ -52,6 +52,7 @@ func handleDelete(w http.ResponseWriter, req *http.Request) {
 
 	for i, employee := range employeeList {
 		if employee.Name == name {
+			log.Printf("Removing employee %v", employee.Name)
 
 			employeeList = employeeList[:i+copy(employeeList[i:], employeeList[i+1:])]
 			saveEmployeeList(employeeList)
@@ -146,13 +147,14 @@ func handleUpdate(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+
 	if len(newEmpInfo.PreviousName) == 0 {
 		// new person
-		log.Printf("Adding new person %v", newEmpInfo.Name)
 		var emp = employee{Name: newEmpInfo.Name, Structure: newEmpInfo.Structure, Photo: newEmpInfo.Photo}
+		log.Printf("Adding new person %v", emp)
 		employeeList = append(employeeList, emp)
-		w.WriteHeader(http.StatusCreated)
-		fmt.Fprintf(w, "%+v", emp)
+		serveJSON(w, req, http.StatusCreated, newEmpInfo)
 	} else {
 		// updated person
 		for i, employee := range employeeList {
@@ -162,7 +164,7 @@ func handleUpdate(w http.ResponseWriter, req *http.Request) {
 				employee.Name = newEmpInfo.Name
 				employee.Photo = newEmpInfo.Photo
 				employeeList[i] = employee
-				w.WriteHeader(http.StatusNoContent)
+				serveJSON(w, req, http.StatusOK, employee)
 				break
 			}
 		}

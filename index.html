@@ -18,16 +18,14 @@
 
     <div id="modification" class="modification" style="display:none;z-index:100;">
         <div id="controls">
-            <input id="name"></input>
-            <input id="location"></input>
-            <div style="text-align: center">
+            <div style="text-align: center; float: left;">
                 <a href="#" class="photo">
                     <img id="photo" class="editphoto" src="missing.png" alt="Photo">
                 </a>
             </div>
-            <div class="buttonbox">
-                <a href="#" id="deletebutton" class="button delete">Delete</a>
-                <a href="#" id="savebutton" class="button save">Save</a>
+            <div class="controlrow">
+                <label id="namelabel" class="editabletext"></label>
+                <input id="name" class="clickedit" type="text" />
             </div>
         </div>
         <div id="camera">
