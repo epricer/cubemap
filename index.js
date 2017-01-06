@@ -13,16 +13,20 @@ var mapapp = (function() {
 
     return {
         initEvents: function() {
-            $("#body").on('resize', mapapp.drawMap);
+            $(window).resize(mapapp.drawMap);
             $("#body").on('mousemove', mapapp.trackCursor);
-            $("#deletebutton").on('click', mapapp.deleteEmployee);
-            $("#savebutton").on('click', mapapp.commitModification);
             $("#closebutton").on('click', mapapp.closeModifyDialog);
             $("#photo").on('click', mapapp.showCamera);
             $("#video").on('click', mapapp.takePhoto);
             $("#mascot").on('click', mapapp.showQuote);
 
             mapapp.bindClickEdit($("#namelabel"), $("#name"));
+        },
+
+        search: function(e) {
+            if ($(e.target).is('input, textarea')) {
+                return;
+            }
         },
 
         bindClickEdit: function(label, input) {
@@ -186,6 +190,7 @@ var mapapp = (function() {
 
             $("#locationlabel").html(structure.name);
             $("#namelabel").html(employeeName);
+            $("#name").val(employeeName);
 
             $("#photo").attr("src", (employee && employee.photo) ? employee.photo : "missing.png");
             $("#modification").css("display", "block");
@@ -227,7 +232,7 @@ var mapapp = (function() {
                     video.play();
 
                 }).catch(function(err) {
-                    alert("Can't access camera");
+                    alert("No camera, or it can't be accessed.");
                 });
             }
         },
