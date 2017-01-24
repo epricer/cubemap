@@ -7,31 +7,89 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
-var rootPath = ""
-
 func main() {
 
-	rootPath = *flag.String("path", ".", "root path for the web content")
+	var rootPath = flag.String("path", ".", "root path for the web content")
 	var serverPort = flag.Int("port", 8080, "port for web server")
+	var init = flag.Bool("init", false, "flag to generate files")
 	flag.Parse()
-	log.Printf("Cubemap serving from \"%v\" on port %v...\n", rootPath, *serverPort)
-	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(rootPath))))
-	http.HandleFunc("/update", handleUpdate)
-	http.HandleFunc("/delete", handleDelete)
+
+	if *init {
+		initializeFiles(*rootPath)
+		return
+	}
+
+	log.Printf("Cubemap serving from \"%v\" on port %v...\n", *rootPath, *serverPort)
+
+	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(*rootPath))))
+
+	http.HandleFunc("/update", func(w http.ResponseWriter, r *http.Request) {
+		handleUpdate(w, r, *rootPath)
+	})
+
+	http.HandleFunc("/delete", func(w http.ResponseWriter, r *http.Request) {
+		handleDelete(w, r, *rootPath)
+	})
+
 	http.HandleFunc("/quotes", func(w http.ResponseWriter, r *http.Request) {
-		serveJSON(w, r, http.StatusOK, getQuotes())
+		serveJSON(w, r, http.StatusOK, getQuotes(*rootPath))
 	})
+
 	http.HandleFunc("/map", func(w http.ResponseWriter, r *http.Request) {
-		serveJSON(w, r, http.StatusOK, getFloorplan())
+		serveJSON(w, r, http.StatusOK, getFloorplan(*rootPath))
 	})
+
 	http.HandleFunc("/employees", func(w http.ResponseWriter, r *http.Request) {
-		serveJSON(w, r, http.StatusOK, getEmployeeList())
+		serveJSON(w, r, http.StatusOK, getEmployeeList(*rootPath))
 	})
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", *serverPort), nil))
+}
+
+func initializeFiles(rootPath string) {
+
+	// initialize the map
+	var structures = make([]structure, 0)
+	structures = append(structures, structure{Editable: true, Height: 2, Width: 2, Name: "Some Office"})
+	var structuresGroups = make([]structuregroup, 0)
+	structuresGroups = append(structuresGroups, structuregroup{Type: "office", Structures: structures})
+	writeJSONtoFile(rootPath, "map.json", floorplan{Height: 5, Width: 5, StructureGroups: structuresGroups}, false)
+
+	// initialize the employee list
+	var employees = make([]employee, 0)
+	employees = append(employees, employee{Name: "Some Employee", Structure: "Some Office"})
+	writeJSONtoFile(rootPath, "employees.json", employees, false)
+
+	// initialize the employee quotes
+	var quotes = make([]quote, 0)
+	quotes = append(quotes, quote{Quote: "Some clever quote"})
+	writeJSONtoFile(rootPath, "quotes.json", quotes, false)
+}
+
+func writeJSONtoFile(rootPath string, fileName string, data interface{}, overwrite bool) {
+	var path = rootPath + string(os.PathSeparator) + fileName
+	if _, err := os.Stat(path); err == nil {
+		if overwrite == false {
+			log.Printf("File %v already exists. Skipped writing.", path)
+		}
+	}
+
+	outbytes, err := json.MarshalIndent(data, "", "\t")
+	if err != nil {
+		log.Printf("Could not unmarshal to json. Reason: %v", err)
+		return
+	}
+
+	err = ioutil.WriteFile(path, outbytes, 0644)
+	if err != nil {
+		log.Printf("Could not write %v/%v. Reason: %v", rootPath, fileName, err)
+		return
+	}
+
 }
 
 func serveJSON(w http.ResponseWriter, req *http.Request, statusCode int, v interface{}) {
@@ -46,16 +104,16 @@ func serveJSON(w http.ResponseWriter, req *http.Request, statusCode int, v inter
 	w.Write(jsonData)
 }
 
-func handleDelete(w http.ResponseWriter, req *http.Request) {
+func handleDelete(w http.ResponseWriter, req *http.Request, rootPath string) {
 	name := req.URL.Query().Get("name")
-	employeeList := getEmployeeList()
+	employeeList := getEmployeeList(rootPath)
 
 	for i, employee := range employeeList {
 		if employee.Name == name {
 			log.Printf("Removing employee %v", employee.Name)
 
 			employeeList = employeeList[:i+copy(employeeList[i:], employeeList[i+1:])]
-			saveEmployeeList(employeeList)
+			writeJSONtoFile(rootPath, "employees.json", employeeList, true)
 			w.WriteHeader(http.StatusNoContent)
 			return
 		}
@@ -78,40 +136,25 @@ func loadJSONFromFile(t interface{}, filepath string) error {
 	return nil
 }
 
-func getQuotes() []quote {
+func getQuotes(rootPath string) []quote {
 	quotes := make([]quote, 0)
 	loadJSONFromFile(&quotes, rootPath+"/quotes.json")
 	return quotes
 }
 
-func getFloorplan() floorplan {
+func getFloorplan(rootPath string) floorplan {
 	var f floorplan
 	loadJSONFromFile(&f, rootPath+"/map.json")
 	return f
 }
 
-func getEmployeeList() []employee {
+func getEmployeeList(rootPath string) []employee {
 	employeeList := make([]employee, 0)
 	loadJSONFromFile(&employeeList, rootPath+"/employees.json")
 	return employeeList
 }
 
-func saveEmployeeList(employeeList []employee) {
-
-	outbytes, err := json.MarshalIndent(employeeList, "", "\t")
-	if err != nil {
-		log.Printf("Could not unmarshal to json. Reason: %v", err)
-		return
-	}
-
-	err = ioutil.WriteFile(rootPath+"/employees.json", outbytes, 0644)
-	if err != nil {
-		log.Printf("Could not write %v/employees.jsonxml. Reason: %v", rootPath, err)
-		return
-	}
-}
-
-func handleUpdate(w http.ResponseWriter, req *http.Request) {
+func handleUpdate(w http.ResponseWriter, req *http.Request, rootPath string) {
 
 	var newEmpInfo change
 	if req.Body == nil {
@@ -127,8 +170,8 @@ func handleUpdate(w http.ResponseWriter, req *http.Request) {
 	}
 
 	//TODO: Make sure the selected structure exists and is editable!
-	fp := getFloorplan()
-	employeeList := getEmployeeList()
+	fp := getFloorplan(rootPath)
+	employeeList := getEmployeeList(rootPath)
 
 	structureOkay := false
 	for _, sg := range fp.StructureGroups {
@@ -169,7 +212,7 @@ func handleUpdate(w http.ResponseWriter, req *http.Request) {
 			}
 		}
 	}
-	saveEmployeeList(employeeList)
+	writeJSONtoFile(rootPath, "employees.json", employeeList, true)
 }
 
 type floorplan struct {
