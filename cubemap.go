@@ -16,6 +16,8 @@ func main() {
 	var rootPath = flag.String("path", ".", "root path for the web content")
 	var serverPort = flag.Int("port", 8080, "port for web server")
 	var init = flag.Bool("init", false, "flag to generate files")
+	var certFile = flag.String("cert", "", "certificiate filename (must be specified with key)")
+	var keyFile = flag.String("key", "", "key filename (must be specified with cert)")
 	flag.Parse()
 
 	if *init {
@@ -47,7 +49,27 @@ func main() {
 		serveJSON(w, r, http.StatusOK, getEmployeeList(*rootPath))
 	})
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", *serverPort), nil))
+	if len(*certFile) > 0 || len(*keyFile) > 0 {
+		if len(*certFile) == 0 {
+			log.Fatal("Cert file must be specified if key file is specified")
+		}
+
+		if len(*keyFile) == 0 {
+			log.Fatal("Key file must be specified if cert file is specified")
+		}
+
+		if _, err := os.Stat(*rootPath + "/" + *certFile); os.IsNotExist(err) {
+			log.Fatalf("Cert file %v/%v is missing", *rootPath, *certFile)
+		}
+
+		if _, err := os.Stat(*rootPath + "/" + *keyFile); os.IsNotExist(err) {
+			log.Fatalf("Key file %v/%v is missing", *rootPath, *keyFile)
+		}
+		log.Fatal(http.ListenAndServeTLS(fmt.Sprintf(":%v", *serverPort), *certFile, *keyFile, nil))
+	} else {
+		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", *serverPort), nil))
+	}
+
 }
 
 func initializeFiles(rootPath string) {

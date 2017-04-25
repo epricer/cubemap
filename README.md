@@ -8,11 +8,16 @@
 
 * fill out the map.json file (it will auto-scale to fit, so the units are arbitrary)
 * install go
-* `$go run cubemap.go -port [desired port]`'
-* visit http://servername:port/
+* `$go run cubemap.go`'
+* visit http://servername:8080/
+* options
+ * -init flag to generate files
+ * -port port for the web server. Default is 8080
+ * -path root of content. default is "c"
+ * -cert certificiate filename (must be specified with key)
+ * -key key filename (must be specified with cert)
 
 ### TODO ###
 * generate the json files as templates with a command line flag
-* ~~add pictures~~
 * maybe remove the quotes functionality
 * scroll to zoom
