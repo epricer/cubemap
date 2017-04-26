@@ -13,6 +13,7 @@
 * options
  * -init flag to generate files
  * -port port for the web server. Default is 8080
+ * -oldport port from which to redirect to the server port. Default is 8080
  * -path root of content. default is "c"
  * -cert certificiate filename (must be specified with key)
  * -key key filename (must be specified with cert)

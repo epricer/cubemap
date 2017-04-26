@@ -15,6 +15,7 @@ func main() {
 
 	var rootPath = flag.String("path", ".", "root path for the web content")
 	var serverPort = flag.Int("port", 8080, "port for web server")
+	var redirectFromPort = flag.Int("oldport", 0, "port from which to redirect to the server port")
 	var init = flag.Bool("init", false, "flag to generate files")
 	var certFile = flag.String("cert", "", "certificiate filename (must be specified with key)")
 	var keyFile = flag.String("key", "", "key filename (must be specified with cert)")
@@ -24,8 +25,6 @@ func main() {
 		initializeFiles(*rootPath)
 		return
 	}
-
-	log.Printf("Cubemap serving from \"%v\" on port %v...\n", *rootPath, *serverPort)
 
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(*rootPath))))
 
@@ -49,6 +48,7 @@ func main() {
 		serveJSON(w, r, http.StatusOK, getEmployeeList(*rootPath))
 	})
 
+	var isTLS = false
 	if len(*certFile) > 0 || len(*keyFile) > 0 {
 		if len(*certFile) == 0 {
 			log.Fatal("Cert file must be specified if key file is specified")
@@ -65,11 +65,22 @@ func main() {
 		if _, err := os.Stat(*rootPath + "/" + *keyFile); os.IsNotExist(err) {
 			log.Fatalf("Key file %v/%v is missing", *rootPath, *keyFile)
 		}
+		isTLS = true
+	}
+
+	if *redirectFromPort != 0 {
+		log.Printf("Cubemap redirection from port %v to port %v...\n", *redirectFromPort, *serverPort)
+		go http.ListenAndServe(fmt.Sprintf(":%v", *redirectFromPort), http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			handleRedirect(w, r, serverPort, isTLS)
+		}))
+	}
+
+	log.Printf("Cubemap serving from \"%v\" on port %v...\n", *rootPath, *serverPort)
+	if isTLS {
 		log.Fatal(http.ListenAndServeTLS(fmt.Sprintf(":%v", *serverPort), *certFile, *keyFile, nil))
 	} else {
 		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", *serverPort), nil))
 	}
-
 }
 
 func initializeFiles(rootPath string) {
@@ -140,6 +151,22 @@ func handleDelete(w http.ResponseWriter, req *http.Request, rootPath string) {
 			return
 		}
 	}
+}
+
+func handleRedirect(w http.ResponseWriter, req *http.Request, toPort *int, isTLS bool) {
+	// remove/add not default ports from req.Host
+	var protocol = "http"
+	if isTLS {
+		protocol = "https"
+	}
+	var host = req.Host[0:strings.LastIndex(req.Host, ":")]
+
+	target := fmt.Sprintf("%s://%s:%v%v", protocol, host, *toPort, req.URL.Path)
+	if len(req.URL.RawQuery) > 0 {
+		target += "?" + req.URL.RawQuery
+	}
+	log.Printf("redirect to: %s", target)
+	http.Redirect(w, req, target, http.StatusPermanentRedirect)
 }
 
 func loadJSONFromFile(t interface{}, filepath string) error {
