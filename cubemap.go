@@ -159,7 +159,10 @@ func handleRedirect(w http.ResponseWriter, req *http.Request, toPort *int, isTLS
 	if isTLS {
 		protocol = "https"
 	}
-	var host = req.Host[0:strings.LastIndex(req.Host, ":")]
+	var host = req.Host
+	if strings.Contains(host, ":") {
+		host = req.Host[0:strings.LastIndex(host, ":")]
+	}
 
 	target := fmt.Sprintf("%s://%s:%v%v", protocol, host, *toPort, req.URL.Path)
 	if len(req.URL.RawQuery) > 0 {
